@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<id>medication-administration</id>
+	<name>Medication Administration</name>
+	<version>1.0.0-SNAPSHOT</version>
+	<package>${MODULE_PACKAGE}</package>
+	<author>Bahmni</author>
+	<description>Medication Administration module contains DB modelling and FHIR translation layers for medication administration</description>
+
+	<activator>org.openmrs.MedicationAdministrationActivator</activator>
+</module>
+
