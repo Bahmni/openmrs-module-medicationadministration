@@ -89,6 +89,16 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-server</artifactId>
+		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>org.openmrs.web</groupId>-->
 <!--			<artifactId>openmrs-web</artifactId>-->
@@ -101,17 +111,17 @@
 			<scope>provided</scope>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.openmrs.module</groupId>-->
-<!--			<artifactId>fhir2-api</artifactId>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>fhir2-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.openmrs.module</groupId>-->
-<!--			<artifactId>fhir2-omod</artifactId>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>fhir2-omod</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.openmrs.test</groupId>

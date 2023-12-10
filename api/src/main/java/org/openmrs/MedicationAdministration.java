@@ -9,6 +9,8 @@
  */
 package org.openmrs;
 
+import org.hl7.fhir.instance.model.api.IBaseResource;
+
 import javax.persistence.*;
 import java.util.Date;
 
