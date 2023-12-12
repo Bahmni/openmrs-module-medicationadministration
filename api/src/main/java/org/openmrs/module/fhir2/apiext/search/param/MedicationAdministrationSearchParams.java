@@ -24,44 +24,44 @@ import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 
 import java.util.HashSet;
 
-//@Data
-//@NoArgsConstructor
-//@EqualsAndHashCode(callSuper = true)
-public class MedicationAdministrationSearchParams { //extends BaseResourceSearchParams {
-//
-//	private ReferenceAndListParam patientReference;
-//
-//	private ReferenceAndListParam supportingInfoReference;
-//
-//	private ReferenceAndListParam performerReference;
-//
-//	private ReferenceAndListParam medicationReference;
-//
-//	private TokenAndListParam status;
-//
-//	private DateParam effectiveDate;
-//
-//	@Builder
-//	public MedicationAdministrationSearchParams(ReferenceAndListParam patientReference,
-//                                                ReferenceAndListParam supportingInfoReference, ReferenceAndListParam performerReference,
-//                                                ReferenceAndListParam medicationReference, TokenAndListParam id, TokenAndListParam status, DateParam effectiveDate,
-//                                                DateRangeParam lastUpdated, HashSet<Include> includes, HashSet<Include> revIncludes) {
-//
-//		super(id, lastUpdated, null, includes, revIncludes);
-//
-//		this.patientReference = patientReference;
-//		this.supportingInfoReference = supportingInfoReference;
-//		this.performerReference = performerReference;
-//		this.medicationReference = medicationReference;
-//		this.effectiveDate = effectiveDate;
-//		this.status = status;
-//	}
-//
-//	@Override
-//	public SearchParameterMap toSearchParameterMap() {
-//		return baseSearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, getPatientReference());
-//		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getPerformerReference());
-//		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_SUPPORT_INFO_SEARCH_HANDLER,
-//		           // getSupportingInfoReference());
-//	}
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class MedicationAdministrationSearchParams extends BaseResourceSearchParams {
+
+	private ReferenceAndListParam patientReference;
+
+	private ReferenceAndListParam supportingInfoReference;
+
+	private ReferenceAndListParam performerReference;
+
+	private ReferenceAndListParam medicationReference;
+
+	private TokenAndListParam status;
+
+	private DateParam effectiveDate;
+
+	@Builder
+	public MedicationAdministrationSearchParams(ReferenceAndListParam patientReference,
+                                                ReferenceAndListParam supportingInfoReference, ReferenceAndListParam performerReference,
+                                                ReferenceAndListParam medicationReference, TokenAndListParam id, TokenAndListParam status, DateParam effectiveDate,
+                                                DateRangeParam lastUpdated, HashSet<Include> includes, HashSet<Include> revIncludes) {
+
+		super(id, lastUpdated, null, includes, revIncludes);
+
+		this.patientReference = patientReference;
+		this.supportingInfoReference = supportingInfoReference;
+		this.performerReference = performerReference;
+		this.medicationReference = medicationReference;
+		this.effectiveDate = effectiveDate;
+		this.status = status;
+	}
+
+	@Override
+	public SearchParameterMap toSearchParameterMap() {
+		return baseSearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, getPatientReference());
+		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getPerformerReference());
+		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_SUPPORT_INFO_SEARCH_HANDLER,
+		           // getSupportingInfoReference());
+	}
 }

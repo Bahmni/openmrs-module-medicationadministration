@@ -16,11 +16,11 @@ import org.openmrs.Concept;
 import org.openmrs.module.fhir2.api.translators.ToFhirTranslator;
 import org.openmrs.module.fhir2.api.translators.ToOpenmrsTranslator;
 
-public interface MedicationAdministrationStatusTranslator { //extends ToFhirTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus>, ToOpenmrsTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus> {
-//
-//    @Override
-//    MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull Concept concept);
-//
-//    @Override
-//    Concept toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus resource);
+public interface MedicationAdministrationStatusTranslator extends ToFhirTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus>, ToOpenmrsTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus> {
+
+    @Override
+    MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull Concept concept);
+
+    @Override
+    Concept toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus resource);
 }

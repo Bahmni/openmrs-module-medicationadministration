@@ -30,10 +30,9 @@ import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
 import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Transactional
 @Setter(AccessLevel.PACKAGE)
 public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationAdministration> implements FhirMedicationAdministrationDao<MedicationAdministration> {
 

@@ -13,37 +13,37 @@ import javax.annotation.Nonnull;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.openmrs.module.fhir2.api.translators.OpenmrsFhirUpdatableTranslator;
 
-public interface MedicationAdministrationTranslator { //<T> extends OpenmrsFhirUpdatableTranslator<T, MedicationAdministration> {
+public interface MedicationAdministrationTranslator<T> extends OpenmrsFhirUpdatableTranslator<T, MedicationAdministration> {
 
-//	/**
-//	 * Maps a {@link T} to a {@link MedicationAdministration} resource
-//	 *
-//	 * @param medicationAdministrationData the OpenMRS drugOrder to translate
-//	 * @return the corresponding FHIR MedicationAdministration resource
-//	 */
-//	@Override
-//	MedicationAdministration toFhirResource(@Nonnull T medicationAdministrationData);
-//
-//	/**
-//	 * Maps a {@link MedicationAdministration} medicationAdministration to an existing
-//	 * {@link MedicationAdministration}
-//	 *
-//	 * @param existingMedicationAdministrationData the existingDrugOrder to update
-//	 * @param medicationAdministration the medicationAdministration to map
-//	 * @return an updated version of the existingDrugOrder
-//	 */
-//	@Override
-//	T toOpenmrsType(@Nonnull T existingMedicationAdministrationData,
-//	        @Nonnull MedicationAdministration medicationAdministration);
-//
-//	/**
-//	 * Maps a {@link MedicationAdministration} medicationAdministration to an existing
-//	 * {@link T}
-//	 *
-//	 * @param medicationAdministration the medicationAdministration to map
-//	 * @return an updated version of the existingDrugOrder
-//	 */
-//	@Override
-//	T toOpenmrsType(@Nonnull MedicationAdministration medicationAdministration);
+	/**
+	 * Maps a {@link T} to a {@link MedicationAdministration} resource
+	 *
+	 * @param medicationAdministrationData the OpenMRS drugOrder to translate
+	 * @return the corresponding FHIR MedicationAdministration resource
+	 */
+	@Override
+	MedicationAdministration toFhirResource(@Nonnull T medicationAdministrationData);
+
+	/**
+	 * Maps a {@link MedicationAdministration} medicationAdministration to an existing
+	 * {@link MedicationAdministration}
+	 *
+	 * @param existingMedicationAdministrationData the existingDrugOrder to update
+	 * @param medicationAdministration the medicationAdministration to map
+	 * @return an updated version of the existingDrugOrder
+	 */
+	@Override
+	T toOpenmrsType(@Nonnull T existingMedicationAdministrationData,
+	        @Nonnull MedicationAdministration medicationAdministration);
+
+	/**
+	 * Maps a {@link MedicationAdministration} medicationAdministration to an existing
+	 * {@link T}
+	 *
+	 * @param medicationAdministration the medicationAdministration to map
+	 * @return an updated version of the existingDrugOrder
+	 */
+	@Override
+	T toOpenmrsType(@Nonnull MedicationAdministration medicationAdministration);
 
 }

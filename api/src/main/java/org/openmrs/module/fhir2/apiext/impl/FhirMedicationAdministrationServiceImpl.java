@@ -9,39 +9,44 @@
  */
 package org.openmrs.module.fhir2.apiext.impl;
 
-//import lombok.AccessLevel;
-//import lombok.Getter;
-//import lombok.Setter;
-//import org.hl7.fhir.r4.model.MedicationAdministration;
-//import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
-//import org.openmrs.module.fhir2.api.search.SearchQuery;
-//import org.openmrs.module.fhir2.api.search.SearchQueryInclude;
-//import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
-//@Component
-//@Setter(AccessLevel.PACKAGE)
-//@Getter(AccessLevel.PROTECTED)
-public class FhirMedicationAdministrationServiceImpl { //extends BaseFhirService<MedicationAdministration,org.openmrs.module.fhir2.apiext.model.MedicationAdministration> implements FhirMedicationAdministrationService {
+import ca.uhn.fhir.rest.api.server.IBundleProvider;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import org.hl7.fhir.r4.model.MedicationAdministration;
+import org.openmrs.module.fhir2.api.impl.BaseFhirService;
+import org.openmrs.module.fhir2.apiext.FhirMedicationAdministrationService;
+import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.fhir2.api.search.SearchQuery;
+import org.openmrs.module.fhir2.api.search.SearchQueryInclude;
+import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
+import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+@Setter(AccessLevel.PACKAGE)
+@Getter(AccessLevel.PROTECTED)
+public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration,org.openmrs.module.fhir2.apiext.model.MedicationAdministration> implements FhirMedicationAdministrationService {
 	
-//	@Autowired
-//	private MedicationAdministrationTranslator translator;
-//
-//	@Autowired
-//	private FhirMedicationAdministrationDao dao;
-//
-//	@Autowired
-//	private SearchQueryInclude<MedicationAdministration> searchQueryInclude;
-//
-//	@Autowired
-//	private SearchQuery<org.openmrs.module.fhir2.apiext.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.fhir2.apiext.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.fhir2.apiext.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
-//
-//	@Override
-//	public IBundleProvider searchForMedicationAdministration(
-//	        MedicationAdministrationSearchParams medicationAdministrationSearchParams) {
-//		return searchQuery.getQueryResults(medicationAdministrationSearchParams.toSearchParameterMap(), dao, translator,
-//	    searchQueryInclude);
-//	}
+	@Autowired
+	private MedicationAdministrationTranslator translator;
+
+	@Autowired
+	private FhirMedicationAdministrationDao dao;
+
+	@Autowired
+	private SearchQueryInclude<MedicationAdministration> searchQueryInclude;
+
+	@Autowired
+	private SearchQuery<org.openmrs.module.fhir2.apiext.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.fhir2.apiext.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.fhir2.apiext.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
+
+	@Override
+	public IBundleProvider searchForMedicationAdministration(
+	        MedicationAdministrationSearchParams medicationAdministrationSearchParams) {
+		return searchQuery.getQueryResults(medicationAdministrationSearchParams.toSearchParameterMap(), dao, translator,
+	    searchQueryInclude);
+	}
 	
 }

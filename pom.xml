@@ -137,6 +137,14 @@
 				</exclusions>
 			</dependency>
 
+			<dependency>
+				<groupId>org.openmrs.web</groupId>
+				<artifactId>openmrs-web</artifactId>
+				<version>${openmrsPlatformVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
