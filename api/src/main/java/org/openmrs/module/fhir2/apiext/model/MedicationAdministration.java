@@ -7,9 +7,9 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs;
+package org.openmrs.module.fhir2.apiext.model;
 
-import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.openmrs.*;
 
 import javax.persistence.*;
 import java.util.Date;

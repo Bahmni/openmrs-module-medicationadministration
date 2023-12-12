@@ -1,4 +1,4 @@
-package org.openmrs;
+package org.openmrs.module.fhir2.apiext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

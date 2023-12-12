@@ -8,12 +8,12 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-package org.openmrs.module.fhir2.api;
+package org.openmrs.module.fhir2.apiext;
 
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.openmrs.module.fhir2.api.FhirService;
-import org.openmrs.module.fhir2.api.search.param.MedicationAdministrationSearchParams;
+import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
 
 public interface FhirMedicationAdministrationService extends FhirService<MedicationAdministration> {
 	

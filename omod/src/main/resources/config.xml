@@ -9,6 +9,6 @@
 	<author>Bahmni</author>
 	<description>Medication Administration module contains DB modelling and FHIR translation layers for medication administration</description>
 
-	<activator>org.openmrs.MedicationAdministrationActivator</activator>
+	<activator>org.openmrs.module.fhir2.apiext.MedicationAdministrationActivator</activator>
 </module>
 

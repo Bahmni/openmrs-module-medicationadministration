@@ -10,6 +10,6 @@
     <package>${MODULE_PACKAGE}</package>
     <author>Bahmni</author>
 
-    <activator>org.openmrs.MedicationAdministrationActivator</activator>
+    <activator>org.openmrs.module.fhir2.apiext.MedicationAdministrationActivator</activator>
 
 </module>

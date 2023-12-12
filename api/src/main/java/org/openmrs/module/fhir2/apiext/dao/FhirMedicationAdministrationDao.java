@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.api.dao;
+package org.openmrs.module.fhir2.apiext.dao;
 
 import javax.annotation.Nonnull;
 
@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.openmrs.Auditable;
 import org.openmrs.OpenmrsObject;
+import org.openmrs.module.fhir2.api.dao.FhirDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 
 public interface FhirMedicationAdministrationDao<T extends OpenmrsObject & Auditable> extends FhirDao<T> {
