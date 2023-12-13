@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Setter(AccessLevel.PACKAGE)
 public class MedicationAdministrationStatusTranslatorImpl implements MedicationAdministrationStatusTranslator {
 
-    public static final String CONCEPT_SOURCE_URI = "http://terminology.hl7.org/CodeSystem/medicationadministration-status";
+    public static final String CONCEPT_SOURCE_URI = "http://hl7.org/fhir/CodeSystem/medication-admin-status";
 
     @Autowired
     FhirConceptSourceService conceptSourceService;

@@ -25,7 +25,7 @@ import lombok.Setter;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hl7.fhir.r4.model.MedicationRequest;
-import org.openmrs.module.fhir2.apiext.model.MedicationAdministration;
+import org.openmrs.module.fhir2.model.MedicationAdministration;
 import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
 import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;

@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 //
 @Component
 @Setter(AccessLevel.PACKAGE)
-public class MedicationAdministrationTranslatorImpl implements MedicationAdministrationTranslator<org.openmrs.module.fhir2.apiext.model.MedicationAdministration> {
+public class MedicationAdministrationTranslatorImpl implements MedicationAdministrationTranslator<org.openmrs.module.fhir2.model.MedicationAdministration> {
 
 	@Autowired
 	private MedicationAdministrationStatusTranslator statusTranslator;
@@ -53,7 +53,7 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 
 
 	@Override
-	public MedicationAdministration toFhirResource(@Nonnull org.openmrs.module.fhir2.apiext.model.MedicationAdministration openmrsMedicationAdministration) {
+	public MedicationAdministration toFhirResource(@Nonnull org.openmrs.module.fhir2.model.MedicationAdministration openmrsMedicationAdministration) {
 		notNull(openmrsMedicationAdministration, "The FhirMedicationAdministration object should not be null");
 
 		MedicationAdministration medicationAdministration = new MedicationAdministration();
@@ -103,14 +103,14 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 	}
 
 	@Override
-	public org.openmrs.module.fhir2.apiext.model.MedicationAdministration toOpenmrsType(@Nonnull MedicationAdministration medicationAdministration) {
+	public org.openmrs.module.fhir2.model.MedicationAdministration toOpenmrsType(@Nonnull MedicationAdministration medicationAdministration) {
 		notNull(medicationAdministration, "The MedicationAdministration object should not be null");
-		return toOpenmrsType(new org.openmrs.module.fhir2.apiext.model.MedicationAdministration(), medicationAdministration);
+		return toOpenmrsType(new org.openmrs.module.fhir2.model.MedicationAdministration(), medicationAdministration);
 	}
 
 	@Override
-	public org.openmrs.module.fhir2.apiext.model.MedicationAdministration toOpenmrsType(
-	        @Nonnull org.openmrs.module.fhir2.apiext.model.MedicationAdministration existingOpenmrsMedicationAdministration,
+	public org.openmrs.module.fhir2.model.MedicationAdministration toOpenmrsType(
+	        @Nonnull org.openmrs.module.fhir2.model.MedicationAdministration existingOpenmrsMedicationAdministration,
 	        @Nonnull MedicationAdministration medicationAdministration) {
 		notNull(existingOpenmrsMedicationAdministration, "The existing Openmrs Medication Administration object should not be null");
 		notNull(medicationAdministration, "The MedicationAdministration object should not be null");

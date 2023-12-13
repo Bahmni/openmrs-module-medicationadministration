@@ -16,7 +16,7 @@
 	<description>Medication Administration module contains all backend APIs for Medication Administration</description>
 
 	<properties>
-		<MODULE_ID>a-medication-administration</MODULE_ID>
+		<MODULE_ID>medication-administration</MODULE_ID>
 		<MODULE_NAME>${project.name}</MODULE_NAME>
 		<MODULE_VERSION>${project.version}</MODULE_VERSION>
 		<MODULE_PACKAGE>org.bahmni.module.medication-administration</MODULE_PACKAGE>
