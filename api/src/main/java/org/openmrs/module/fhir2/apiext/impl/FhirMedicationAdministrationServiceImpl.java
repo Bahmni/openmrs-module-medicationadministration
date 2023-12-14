@@ -23,10 +23,10 @@ import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSear
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PROTECTED)
 public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration, org.openmrs.module.fhir2.model.MedicationAdministration> implements FhirMedicationAdministrationService {

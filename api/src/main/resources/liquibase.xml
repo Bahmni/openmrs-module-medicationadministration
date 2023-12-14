@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-    <changeSet id="2023-12-05-1854_medication_adminsitration" author="Bahmni">
+    <changeSet id="2023-12-05-1854_medication_administration" author="Bahmni">
         <preConditions onFail="MARK_RAN" onFailMessage="Table medication_administration already exists">
             <not>
                 <tableExists tableName="medication_administration" />
@@ -61,5 +61,23 @@
         <addForeignKeyConstraint constraintName="medication_administration_creator_fk" baseTableName="medication_administration" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
         <addForeignKeyConstraint constraintName="medication_administration_changed_by_fk" baseTableName="medication_administration" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
         <addForeignKeyConstraint constraintName="medication_administration_voided_by_fk" baseTableName="medication_administration" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="202312051854_medication_administration_privileges" author="Bahmni">
+        <insert tableName="privilege">
+            <column name="privilege" value="Get Medication Administrations"/>
+            <column name="description" value="Able to get Medication Administrations"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc45"/>
+        </insert>
+        <insert tableName="privilege">
+            <column name="privilege" value="Edit Medication Administration"/>
+            <column name="description" value="Able to edit Medication Administration"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc46"/>
+        </insert>
+        <insert tableName="privilege">
+            <column name="privilege" value="Delete Medication Administration"/>
+            <column name="description" value="Able to delete Medication Administration"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc47"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
