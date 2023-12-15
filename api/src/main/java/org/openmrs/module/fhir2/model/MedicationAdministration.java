@@ -281,14 +281,18 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		if (obj == null || getClass() != obj.getClass()) return false;
 
 		MedicationAdministration other = (MedicationAdministration) obj;
-		return Objects.equals(this.medicationAdministrationId, other.medicationAdministrationId)
+		boolean yes= Objects.equals(this.medicationAdministrationId, other.medicationAdministrationId)
 				|| Objects.equals(this.getUuid(),other.getUuid());
-
+		System.out.println("Comparing medication Admin DB Objects **** " + yes);
+		return yes;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.getUuid());
+		int hash = Objects.hash(this.getUuid());
+		System.out.println("Into Hashcode of Med Admin DB Objects **** " + hash);
+		System.out.println("Into Hashcode of Med Admin DB Objects **** " + hash);
+		return hash;
 	}
 
 }
