@@ -13,6 +13,7 @@ import org.openmrs.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * The MedicationAdministration class records detailed information about the provision of a supply of a medication 
@@ -273,4 +274,21 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+
+		MedicationAdministration other = (MedicationAdministration) obj;
+		return Objects.equals(this.medicationAdministrationId, other.medicationAdministrationId)
+				|| Objects.equals(this.getUuid(),other.getUuid());
+
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.getUuid());
+	}
+
 }
