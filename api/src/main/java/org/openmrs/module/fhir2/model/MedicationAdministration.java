@@ -291,7 +291,6 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	public int hashCode() {
 		int hash = Objects.hash(this.getUuid());
 		System.out.println("Into Hashcode of Med Admin DB Objects **** " + hash);
-		System.out.println("Into Hashcode of Med Admin DB Objects **** " + hash);
 		return hash;
 	}
 
