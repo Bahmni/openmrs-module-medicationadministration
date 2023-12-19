@@ -34,6 +34,7 @@
             <column name="dose_units" type="int" />
             <column name="route" type="int" />
             <column name="notes" type="text" />
+            <column name="form_namespace_and_path" type="varchar(255)" />
             <column name="creator" type="int">
                 <constraints nullable="false" />
             </column>
