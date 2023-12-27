@@ -7,13 +7,14 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.model;
+package org.openmrs.module.ipd.api.model;
 
 import org.openmrs.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * The MedicationAdministration class records detailed information about the provision of a supply of a medication 
@@ -60,19 +61,19 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	private Drug drug;
 
 	/**
-	 * FHIR:performer.actor with null for performer.function.
-	 * Per <a href="https://www.hl7.org/fhir/medicationdispense-definitions.html#MedicationDispense.performer">
-	 *     	https://www.hl7.org/fhir/medicationdispense-definitions.html#MedicationDispense.performer
-	 *     </a>specification, It should be assumed that the actor is the dispenser of the medication
+	 * FHIR:performer
+	 * @see <a href="https://www.hl7.org/fhir/medicationadministration-definitions.html#MedicationAdministration.performer">
+	 *     	https://www.hl7.org/fhir/medicationadministration-definitions.html#MedicationAdministration.performer
+	 *     </a>specification, It should be assumed that the actor can be the performer, verifier or witness of the medication administration.
 	 */
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "administer")
-	private Provider administer;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "medication_administration_id")
+	private Set<MedicationAdministrationPerformer> performers;
 
 	/**
-	 * FHIR:authorizingPrescription
-	 * The drug order that led to this dispensing event; 
-	 * note that authorizing prescription maps to a "MedicationRequest" FHIR resource
+	 * FHIR:request
+	 * The drug order that led to this administration event;
+	 * note that request maps to a "MedicationRequest" FHIR resource
 	 */
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "drug_order_id")
@@ -109,21 +110,21 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 
 	/**
 	 * FHIR:dosage.text
-	 * Relates to drugOrder.dosingInstructions
+	 * The dosage instructions should reflect the dosage of the medication that was administered.
 	 */
 	@Column(name = "dosing_instructions", length=65535)
 	private String dosingInstructions;
 
 	/**
 	 * FHIR:dosage.dose.value
-	 * Relates to drugOrder.dose
+	 * Numbered Value of the amount of the medication given at one administration event
 	 */
 	@Column(name = "dose")
 	private Double dose;
 
 	/**
 	 * FHIR:dosage.dose.unit
-	 * Relates to drugOrder.doseUnits
+	 * Units of the amount of the medication given at one administration event. For example, mg, mL, etc.
 	 */
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "dose_units")
@@ -131,18 +132,31 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	
 	/**
 	 * FHIR:dosage.route
-	 * Relates to drugOrder.route
+	 * Path of substance into body, For example, topical, intravenous, etc.
 	 */
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "route")
 	private Concept route;
 
 	/**
+	 * FHIR:dosage.site
+	 * Body site administered to, For example, left arm, etc.
+	 */
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "site")
+	private Concept site;
+
+	/**
 	 * FHIR:note
+	 * @see <a href="https://hl7.org/fhir/R4/datatypes.html#Annotation">
+	 *     	https://hl7.org/fhir/R4/datatypes.html#Annotation
+	 *     </a>
 	 * Notes or additional information about the medication administration.
 	 */
-	@Column(name = "notes", length=65535)
-	private String notes;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "medication_administration_id")
+	private Set<Annotation> notes;
+
 
 	public MedicationAdministration() {
 	}
@@ -195,12 +209,12 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		this.drug = drug;
 	}
 
-	public Provider getAdminister() {
-		return administer;
+	public Set<MedicationAdministrationPerformer> getPerformers() {
+		return performers;
 	}
 
-	public void setAdminister(Provider administer) {
-		this.administer = administer;
+	public void setPerformers(Set<MedicationAdministrationPerformer> performers) {
+		this.performers = performers;
 	}
 
 	public DrugOrder getDrugOrder() {
@@ -267,11 +281,19 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		this.route = route;
 	}
 
-	public String getNotes() {
+	public Concept getSite() {
+		return site;
+	}
+
+	public void setSite(Concept site) {
+		this.site = site;
+	}
+
+	public Set<Annotation> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(String notes) {
+	public void setNotes(Set<Annotation> notes) {
 		this.notes = notes;
 	}
 
@@ -283,14 +305,12 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		MedicationAdministration other = (MedicationAdministration) obj;
 		boolean yes= Objects.equals(this.medicationAdministrationId, other.medicationAdministrationId)
 				|| Objects.equals(this.getUuid(),other.getUuid());
-		System.out.println("Comparing medication Admin DB Objects **** " + yes);
 		return yes;
 	}
 
 	@Override
 	public int hashCode() {
 		int hash = Objects.hash(this.getUuid());
-		System.out.println("Into Hashcode of Med Admin DB Objects **** " + hash);
 		return hash;
 	}
 

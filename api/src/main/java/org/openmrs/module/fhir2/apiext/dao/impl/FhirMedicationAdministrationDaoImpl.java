@@ -26,7 +26,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hl7.fhir.r4.model.MedicationRequest;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.module.fhir2.model.MedicationAdministration;
+import org.openmrs.module.ipd.api.model.MedicationAdministration;
 import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
 import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
@@ -71,15 +71,6 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
                 entry.getValue().forEach(patientReference -> handleReference(criteria,
                 (ReferenceAndListParam) patientReference.getParam(), "subjectReference", "s"));
                 break;
-            //    case FhirConstants.MEDICATION_ADMINISTRATION_SUPPORT_INFO_SEARCH_HANDLER:
-            //     entry.getValue().forEach(supportInfoReference -> handleReference(criteria,
-            //             (ReferenceAndListParam) supportInfoReference.getParam(), "supportingInformation", "si"));
-            //     break;
-            //    case FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER:
-            //     entry.getValue()
-            //             .forEach(participantReference -> handleMedicationAdministrationPerformerReference(criteria,
-            //                     (ReferenceAndListParam) participantReference.getParam(), "actorReference", "a"));
-            //     break;
             case FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER:
                 entry.getValue().forEach(d -> handleMedicationReference("d", (ReferenceAndListParam) d.getParam())
                 .ifPresent(c -> criteria.createAlias("drug", "d").add(c)));
@@ -159,29 +150,6 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
                 return Optional.empty();
             }).ifPresent(criteria::add);
         }
-//
-//	private void handleSupportingInformationReference(Criteria criteria, ReferenceAndListParam reference,
-//																  String property, String alias) {
-//		if (lacksAlias(criteria, "si")) {
-//			criteria.createAlias("supportingInformation", "supportingInformation");
-//		}
-//		criteria.add(eq("si."))
-//
-//		handleAndListParam(reference, param -> {
-//			if (validReferenceParam(param)) {
-//				if (lacksAlias(criteria, alias)) {
-//					criteria.createAlias(property, alias);
-//				}
-//
-//				List<Optional<Criterion>> criterionList = new ArrayList<>();
-//				criterionList.add(Optional.of(eq(String.format("%s.targetUuid", alias), param.getIdPart())));
-//				criterionList.add(Optional.of(eq(String.format("%s.type", alias), param.getResourceType())));
-//				return Optional.of(and(toCriteriaArray(criterionList)));
-//			}
-//
-//			return Optional.empty();
-//		}).ifPresent(criteria::add);
-//	}
 
     private Boolean validReferenceParam(ReferenceParam ref) {
         return (ref != null && ref.getIdPart() != null && ref.getResourceType() != null);

@@ -17,21 +17,30 @@ import javax.annotation.Nonnull;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.MedicationAdministration;
-import org.hl7.fhir.r4.model.MedicationRequest;
-import org.openmrs.DrugOrder;
+import org.hl7.fhir.r4.model.SimpleQuantity;
 import org.openmrs.Encounter;
 import org.openmrs.Provider;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.translators.*;
+import org.openmrs.module.fhir2.apiext.translators.AnnotationTranslator;
+import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationStatusTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
+import org.openmrs.module.ipd.api.model.Annotation;
+import org.openmrs.module.ipd.api.model.MedicationAdministration;
+import org.openmrs.module.ipd.api.model.MedicationAdministrationPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-//
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 @Setter(AccessLevel.PACKAGE)
-public class MedicationAdministrationTranslatorImpl implements MedicationAdministrationTranslator<org.openmrs.module.fhir2.model.MedicationAdministration> {
+public class MedicationAdministrationTranslatorImpl implements MedicationAdministrationTranslator<MedicationAdministration> {
 
 	@Autowired
 	private MedicationAdministrationStatusTranslator statusTranslator;
@@ -43,126 +52,161 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 	private EncounterReferenceTranslator<Encounter> encounterReferenceTranslator;
 
 	@Autowired
-	private PractitionerReferenceTranslator<Provider> practitionerReferenceTranslator;
-
-	@Autowired
 	private MedicationRequestReferenceTranslator medicationRequestReferenceTranslator;
 
 	@Autowired
-	private MedicationRequestTranslator medicationRequestTranslator;
+	private MedicationReferenceTranslator medicationReferenceTranslator;
+
+	@Autowired
+	private MedicationAdministrationPerformerTranslator medicationAdministrationPerformerTranslator;
+
+	@Autowired
+	private AnnotationTranslator annotationTranslator;
+
+	@Autowired
+	private ConceptTranslator conceptTranslator;
+
 
 
 	@Override
-	public MedicationAdministration toFhirResource(@Nonnull org.openmrs.module.fhir2.model.MedicationAdministration openmrsMedicationAdministration) {
-		notNull(openmrsMedicationAdministration, "The FhirMedicationAdministration object should not be null");
+	public org.hl7.fhir.r4.model.MedicationAdministration toFhirResource(@Nonnull MedicationAdministration openmrsObject) {
+		notNull(openmrsObject, "The MedicationAdministration object should not be null");
 
-		MedicationAdministration medicationAdministration = new MedicationAdministration();
-		medicationAdministration.setId(openmrsMedicationAdministration.getUuid());
-		medicationAdministration.setEffective(new DateTimeType(openmrsMedicationAdministration.getAdministeredDateTime()));
-		medicationAdministration.setStatus(statusTranslator.toFhirResource(openmrsMedicationAdministration.getStatus()));
-		medicationAdministration
-		        .setSubject(patientReferenceTranslator.toFhirResource(openmrsMedicationAdministration.getPatient()));
-		medicationAdministration
-		        .setContext(encounterReferenceTranslator.toFhirResource(openmrsMedicationAdministration.getEncounter()));
-
-		if (openmrsMedicationAdministration.getAdminister() != null) {
-			medicationAdministration.addPerformer().setActor(practitionerReferenceTranslator.toFhirResource(openmrsMedicationAdministration.getAdminister()));
+		org.hl7.fhir.r4.model.MedicationAdministration fhirObject = new org.hl7.fhir.r4.model.MedicationAdministration();
+		fhirObject.setId(openmrsObject.getUuid());
+		if (openmrsObject.getAdministeredDateTime() != null) {
+			fhirObject.setEffective(new DateTimeType(openmrsObject.getAdministeredDateTime()));
+		}
+		fhirObject.setStatus(statusTranslator.toFhirResource(openmrsObject.getStatus()));
+		if (openmrsObject.getStatusReason() != null) {
+			fhirObject.setStatusReason(Collections.singletonList(conceptTranslator.toFhirResource(openmrsObject.getStatusReason())));
+		}
+		if (openmrsObject.getPatient() != null) {
+			fhirObject.setSubject(patientReferenceTranslator.toFhirResource(openmrsObject.getPatient()));
+		}
+		if (openmrsObject.getEncounter() != null) {
+			fhirObject.setContext(encounterReferenceTranslator.toFhirResource(openmrsObject.getEncounter()));
 		}
 
-
-
-
-		if (openmrsMedicationAdministration.getDrugOrder() !=null)
-		{
-			medicationAdministration.setRequest(medicationRequestReferenceTranslator.toFhirResource(openmrsMedicationAdministration.getDrugOrder()));
-		}
-		else {
-			// This logic is added to translate the drug info if drug order id not mapped
-			//drugOrder.setConcept(openmrsMedicationAdministration.getConcept());
-			DrugOrder drugOrder = new DrugOrder();
-			drugOrder.setDrug(openmrsMedicationAdministration.getDrug());
-			drugOrder.setDose(openmrsMedicationAdministration.getDose());
-			drugOrder.setDoseUnits(openmrsMedicationAdministration.getDoseUnits());
-			drugOrder.setRoute(openmrsMedicationAdministration.getRoute());
-			//drugOrder.setFrequency(openmrsMedicationAdministration.getFrequency());
-			//drugOrder.setAsNeeded(openmrsMedicationAdministration.getAsNeeded());
-			drugOrder.setDosingInstructions(openmrsMedicationAdministration.getDosingInstructions());
-			//drugOrder.setQuantity(openmrsMedicationAdministration.get);
-			//drugOrder.setQuantityUnits(openmrsMedicationAdministration.getDoseUnits());
-			MedicationRequest doseAndQuantity =medicationRequestTranslator.toFhirResource(openmrsMedicationAdministration.getDrugOrder());
-		}
-
-		if (openmrsMedicationAdministration.getNotes() != null) {
-			medicationAdministration.addNote().setText(openmrsMedicationAdministration.getNotes());
-		}
-
-		medicationAdministration.getMeta().setLastUpdated(getLastUpdated(openmrsMedicationAdministration));
-		//medicationAdministration.getMeta().setVersionId(getVersionId(openmrsMedicationAdministration));
-
-		return medicationAdministration;
-	}
-
-	@Override
-	public org.openmrs.module.fhir2.model.MedicationAdministration toOpenmrsType(@Nonnull MedicationAdministration medicationAdministration) {
-		notNull(medicationAdministration, "The MedicationAdministration object should not be null");
-		return toOpenmrsType(new org.openmrs.module.fhir2.model.MedicationAdministration(), medicationAdministration);
-	}
-
-	@Override
-	public org.openmrs.module.fhir2.model.MedicationAdministration toOpenmrsType(
-	        @Nonnull org.openmrs.module.fhir2.model.MedicationAdministration existingOpenmrsMedicationAdministration,
-	        @Nonnull MedicationAdministration medicationAdministration) {
-		notNull(existingOpenmrsMedicationAdministration, "The existing Openmrs Medication Administration object should not be null");
-		notNull(medicationAdministration, "The MedicationAdministration object should not be null");
-
-		if (medicationAdministration.hasId()) {
-			existingOpenmrsMedicationAdministration.setUuid(medicationAdministration.getIdElement().getIdPart());
-		}
-
-		if (medicationAdministration.hasEffectiveDateTimeType()) {
-			existingOpenmrsMedicationAdministration
-			        .setAdministeredDateTime(medicationAdministration.getEffectiveDateTimeType().getValue());
-		}
-
-		if (medicationAdministration.hasStatus()) {
-			existingOpenmrsMedicationAdministration
-			        .setStatus(statusTranslator.toOpenmrsType(medicationAdministration.getStatus()));
-		}
-
-		existingOpenmrsMedicationAdministration
-		        .setPatient(patientReferenceTranslator.toOpenmrsType(medicationAdministration.getSubject()));
-
-		if (medicationAdministration.hasContext()) {
-			existingOpenmrsMedicationAdministration
-			        .setEncounter(encounterReferenceTranslator.toOpenmrsType(medicationAdministration.getContext()));
-		}
-
-		if (medicationAdministration.hasPerformer()) {
-			MedicationAdministration.MedicationAdministrationPerformerComponent performerComponent = medicationAdministration.getPerformerFirstRep();
-			if (performerComponent != null && performerComponent.hasActor()) {
-				existingOpenmrsMedicationAdministration.setAdminister(practitionerReferenceTranslator.toOpenmrsType(performerComponent.getActor()));
-			} else {
-				existingOpenmrsMedicationAdministration.setAdminister(null);
+		if (openmrsObject.getPerformers() != null) {
+			for (MedicationAdministrationPerformer openmrsMedicationAdministrationPerformer : openmrsObject.getPerformers()) {
+				fhirObject.addPerformer(medicationAdministrationPerformerTranslator.toFhirResource(openmrsMedicationAdministrationPerformer));
 			}
-		} else {
-			existingOpenmrsMedicationAdministration.setAdminister(null);
 		}
 
-		if (medicationAdministration.hasRequest()) {
-			existingOpenmrsMedicationAdministration.setDrugOrder(medicationRequestReferenceTranslator.toOpenmrsType(medicationAdministration.getRequest()));
+		if (openmrsObject.getDrugOrder() != null) {
+			fhirObject.setRequest(medicationRequestReferenceTranslator.toFhirResource(openmrsObject.getDrugOrder()));
 		}
 
-		if (medicationAdministration.hasDosage()) {
-			existingOpenmrsMedicationAdministration.setDose(Double.parseDouble(medicationAdministration.getDosage().getDose().getValue()+""));
-			//existingOpenmrsMedicationAdministration.setDoseUnits(medicationAdministration.getDosage().getDose().getCode());
-			//existingOpenmrsMedicationAdministration.setDrug();
+		if (openmrsObject.getDrug() != null) {
+			fhirObject.setMedication(medicationReferenceTranslator.toFhirResource(openmrsObject.getDrug()));
 		}
 
-		if (medicationAdministration.hasNote()) {
-			existingOpenmrsMedicationAdministration.setNotes(medicationAdministration.getNote().get(0).getText());
+		org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent dosage = new org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent();
+		if (openmrsObject.getDose() != null && openmrsObject.getDoseUnits() != null) {
+			SimpleQuantity dose = new SimpleQuantity();
+			dose.setValue(openmrsObject.getDose());
+			dose.setUnit(openmrsObject.getDoseUnits().getId().toString());
+			dosage.setDose(dose);
+		}
+		if (openmrsObject.getRoute() != null) {
+			dosage.setRoute(conceptTranslator.toFhirResource(openmrsObject.getRoute()));
+		}
+		if (openmrsObject.getSite() != null) {
+			dosage.setSite(conceptTranslator.toFhirResource(openmrsObject.getSite()));
+		}
+		if (!StringUtils.isEmpty(openmrsObject.getDosingInstructions())) {
+			dosage.setText(openmrsObject.getDosingInstructions());
+		}
+		fhirObject.setDosage(dosage);
+
+		if (openmrsObject.getNotes() != null) {
+			for (Annotation annotation : openmrsObject.getNotes()) {
+				fhirObject.addNote(annotationTranslator.toFhirResource(annotation));
+			}
 		}
 
-		return existingOpenmrsMedicationAdministration;
+		fhirObject.getMeta().setLastUpdated(getLastUpdated(openmrsObject));
+		//medicationAdministration.getMeta().setVersionId(getVersionId(openmrsObject));
+
+		return fhirObject;
+	}
+
+	@Override
+	public MedicationAdministration toOpenmrsType(@Nonnull org.hl7.fhir.r4.model.MedicationAdministration fhirObject) {
+		notNull(fhirObject, "The MedicationAdministration object should not be null");
+		return toOpenmrsType(new MedicationAdministration(), fhirObject);
+	}
+
+	@Override
+	public MedicationAdministration toOpenmrsType(
+	        @Nonnull MedicationAdministration openmrsObject,
+	        @Nonnull org.hl7.fhir.r4.model.MedicationAdministration fhirObject) {
+		notNull(openmrsObject, "The existing Openmrs MedicationAdministration object should not be null");
+		notNull(fhirObject, "The Fhir MedicationAdministration object should not be null");
+
+		if (fhirObject.hasId()) {
+			openmrsObject.setUuid(fhirObject.getIdElement().getIdPart());
+		}
+		if (fhirObject.hasEffectiveDateTimeType()) {
+			openmrsObject.setAdministeredDateTime(fhirObject.getEffectiveDateTimeType().getValue());
+		}
+		if (fhirObject.hasStatus()) {
+			openmrsObject.setStatus(statusTranslator.toOpenmrsType(fhirObject.getStatus()));
+		}
+		if (fhirObject.hasStatusReason()) {
+			openmrsObject.setStatusReason(conceptTranslator.toOpenmrsType(fhirObject.getStatusReason().get(0)));
+		}
+		if (fhirObject.hasSubject()) {
+			openmrsObject.setPatient(patientReferenceTranslator.toOpenmrsType(fhirObject.getSubject()));
+		}
+		if (fhirObject.hasContext()) {
+			openmrsObject.setEncounter(encounterReferenceTranslator.toOpenmrsType(fhirObject.getContext()));
+		}
+		if (fhirObject.hasPerformer()) {
+			Set<MedicationAdministrationPerformer> performers = new HashSet<>();
+			for (org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationPerformerComponent performerComponent : fhirObject.getPerformer()) {
+				Object obj = medicationAdministrationPerformerTranslator.toOpenmrsType(performerComponent);
+				if (obj != null) {
+					performers.add((MedicationAdministrationPerformer) obj);
+				}
+			}
+			openmrsObject.setPerformers(performers);
+		}
+
+		if (fhirObject.hasRequest()) {
+			openmrsObject.setDrugOrder(medicationRequestReferenceTranslator.toOpenmrsType(fhirObject.getRequest()));
+		}
+		if (fhirObject.hasMedication()) {
+			openmrsObject.setDrug(medicationReferenceTranslator.toOpenmrsType(fhirObject.getMedicationReference()));
+		}
+		if (fhirObject.hasDosage()) {
+			org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent dosage = fhirObject.getDosage();
+			if (dosage.hasDose()) {
+				openmrsObject.setDose(dosage.getDose().getValue().doubleValue());
+				openmrsObject.setDoseUnits(Context.getConceptService().getConcept(dosage.getDose().getUnit()));
+			}
+			if (dosage.hasRoute()) {
+				openmrsObject.setRoute(conceptTranslator.toOpenmrsType(dosage.getRoute()));
+			}
+			if (dosage.hasSite()) {
+				openmrsObject.setSite(conceptTranslator.toOpenmrsType(dosage.getSite()));
+			}
+			if (dosage.hasText()) {
+				openmrsObject.setDosingInstructions(dosage.getText());
+			}
+		}
+		if (fhirObject.hasNote()) {
+			Set<Annotation> annotations = new HashSet<>();
+			for (org.hl7.fhir.r4.model.Annotation annotation : fhirObject.getNote()) {
+				Object obj = annotationTranslator.toOpenmrsType(annotation);
+				if (obj != null) {
+					annotations.add((Annotation) obj);
+				}
+			}
+			openmrsObject.setNotes(annotations);
+		}
+		return openmrsObject;
 
 	}
 }

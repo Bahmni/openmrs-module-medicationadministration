@@ -23,13 +23,11 @@ import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSear
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PROTECTED)
-public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration, org.openmrs.module.fhir2.model.MedicationAdministration> implements FhirMedicationAdministrationService {
+public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration, org.openmrs.module.ipd.api.model.MedicationAdministration> implements FhirMedicationAdministrationService {
 	
 	@Autowired
 	private MedicationAdministrationTranslator translator;
@@ -41,7 +39,7 @@ public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<Med
 	private SearchQueryInclude<MedicationAdministration> searchQueryInclude;
 
 	@Autowired
-	private SearchQuery<org.openmrs.module.fhir2.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.fhir2.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.fhir2.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
+	private SearchQuery<org.openmrs.module.ipd.api.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.ipd.api.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.ipd.api.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
 
 	@Override
 	public IBundleProvider searchForMedicationAdministration(
