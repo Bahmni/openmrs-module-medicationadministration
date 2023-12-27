@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public interface MedicationAdministrationPerformerTranslator<T> extends OpenmrsFhirUpdatableTranslator<T, MedicationAdministration.MedicationAdministrationPerformerComponent> {
 
     /**
-     * Maps <T> an OpenMRS representation of a dispensed medication to a {@link MedicationAdministration.MedicationAdministrationPerformerComponent}
+     * Maps <T> an OpenMRS representation of a medication administration performer to a {@link MedicationAdministration.MedicationAdministrationPerformerComponent}
      *
      * @param openmrsObject the OpenMRS representation to translate
      * @return the corresponding FHIR condition resource

@@ -15,8 +15,8 @@ import lombok.Setter;
 import org.hl7.fhir.r4.model.Reference;
 import org.openmrs.Provider;
 import org.openmrs.module.fhir2.api.translators.PractitionerReferenceTranslator;
-import org.openmrs.module.fhir2.apiext.translators.AnnotationTranslator;
-import org.openmrs.module.ipd.api.model.Annotation;
+import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
+import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,15 +26,15 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 @Component
 @Setter(AccessLevel.PACKAGE)
-public class AnnotationTranslatorImpl implements AnnotationTranslator<Annotation> {
+public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdministrationNoteTranslator<MedicationAdministrationNote> {
 
     @Autowired
     private PractitionerReferenceTranslator<Provider> practitionerReferenceTranslator;
 
 
     @Override
-    public org.hl7.fhir.r4.model.Annotation toFhirResource(@Nonnull Annotation openmrsObject) {
-        notNull(openmrsObject, "The Openmrs Annotation object should not be null");
+    public org.hl7.fhir.r4.model.Annotation toFhirResource(@Nonnull MedicationAdministrationNote openmrsObject) {
+        notNull(openmrsObject, "The Openmrs MedicationAdministrationNote object should not be null");
         org.hl7.fhir.r4.model.Annotation fhirObject = new org.hl7.fhir.r4.model.Annotation();
         fhirObject.setId(openmrsObject.getUuid());
         if (openmrsObject.getAuthor() != null) {
@@ -50,14 +50,14 @@ public class AnnotationTranslatorImpl implements AnnotationTranslator<Annotation
     }
 
     @Override
-    public Annotation toOpenmrsType(@Nonnull org.hl7.fhir.r4.model.Annotation fhirObject) {
+    public MedicationAdministrationNote toOpenmrsType(@Nonnull org.hl7.fhir.r4.model.Annotation fhirObject) {
         notNull(fhirObject, "The Fhir Annotation object should not be null");
-        return this.toOpenmrsType(new Annotation(), fhirObject);
+        return this.toOpenmrsType(new MedicationAdministrationNote(), fhirObject);
     }
 
     @Override
-    public Annotation toOpenmrsType(@Nonnull Annotation openmrsObject, @Nonnull org.hl7.fhir.r4.model.Annotation fhirObject) {
-        notNull(openmrsObject, "The existing Openmrs Annotation object should not be null");
+    public MedicationAdministrationNote toOpenmrsType(@Nonnull MedicationAdministrationNote openmrsObject, @Nonnull org.hl7.fhir.r4.model.Annotation fhirObject) {
+        notNull(openmrsObject, "The existing Openmrs MedicationAdministrationNote object should not be null");
         notNull(fhirObject, "The FHIR Annotation object should not be null");
 
         if (fhirObject.hasId()) {

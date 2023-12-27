@@ -155,7 +155,7 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "medication_administration_id")
-	private Set<Annotation> notes;
+	private Set<MedicationAdministrationNote> notes;
 
 
 	public MedicationAdministration() {
@@ -289,11 +289,11 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		this.site = site;
 	}
 
-	public Set<Annotation> getNotes() {
+	public Set<MedicationAdministrationNote> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(Set<Annotation> notes) {
+	public void setNotes(Set<MedicationAdministrationNote> notes) {
 		this.notes = notes;
 	}
 

@@ -13,10 +13,10 @@ import org.hl7.fhir.r4.model.Annotation;
 import org.openmrs.module.fhir2.api.translators.OpenmrsFhirUpdatableTranslator;
 import javax.annotation.Nonnull;
 
-public interface AnnotationTranslator<T> extends OpenmrsFhirUpdatableTranslator<T, Annotation> {
+public interface MedicationAdministrationNoteTranslator<T> extends OpenmrsFhirUpdatableTranslator<T, Annotation> {
 
     /**
-     * Maps <T> an OpenMRS representation of a dispensed medication to a {@link Annotation}
+     * Maps <T> an OpenMRS representation of a medication administration note to a {@link Annotation}
      *
      * @param openmrsObject the OpenMRS representation to translate
      * @return the corresponding FHIR condition resource

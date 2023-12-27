@@ -21,14 +21,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.SimpleQuantity;
 import org.openmrs.Encounter;
-import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.translators.*;
-import org.openmrs.module.fhir2.apiext.translators.AnnotationTranslator;
+import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationStatusTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
-import org.openmrs.module.ipd.api.model.Annotation;
+import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
 import org.openmrs.module.ipd.api.model.MedicationAdministration;
 import org.openmrs.module.ipd.api.model.MedicationAdministrationPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 	private MedicationAdministrationPerformerTranslator medicationAdministrationPerformerTranslator;
 
 	@Autowired
-	private AnnotationTranslator annotationTranslator;
+	private MedicationAdministrationNoteTranslator medicationAdministrationNoteTranslator;
 
 	@Autowired
 	private ConceptTranslator conceptTranslator;
@@ -121,8 +120,8 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 		fhirObject.setDosage(dosage);
 
 		if (openmrsObject.getNotes() != null) {
-			for (Annotation annotation : openmrsObject.getNotes()) {
-				fhirObject.addNote(annotationTranslator.toFhirResource(annotation));
+			for (MedicationAdministrationNote medicationAdministrationNote : openmrsObject.getNotes()) {
+				fhirObject.addNote(medicationAdministrationNoteTranslator.toFhirResource(medicationAdministrationNote));
 			}
 		}
 
@@ -197,14 +196,14 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 			}
 		}
 		if (fhirObject.hasNote()) {
-			Set<Annotation> annotations = new HashSet<>();
+			Set<MedicationAdministrationNote> medicationAdministrationNotes = new HashSet<>();
 			for (org.hl7.fhir.r4.model.Annotation annotation : fhirObject.getNote()) {
-				Object obj = annotationTranslator.toOpenmrsType(annotation);
+				Object obj = medicationAdministrationNoteTranslator.toOpenmrsType(annotation);
 				if (obj != null) {
-					annotations.add((Annotation) obj);
+					medicationAdministrationNotes.add((MedicationAdministrationNote) obj);
 				}
 			}
-			openmrsObject.setNotes(annotations);
+			openmrsObject.setNotes(medicationAdministrationNotes);
 		}
 		return openmrsObject;
 

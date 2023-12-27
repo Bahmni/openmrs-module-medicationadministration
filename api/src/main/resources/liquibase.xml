@@ -107,15 +107,15 @@
         <addForeignKeyConstraint constraintName="medication_administration_performer_voided_by_fk" baseTableName="medication_administration_performer" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
-    <changeSet id="2023-12-05-1854_annotation" author="Bahmni">
+    <changeSet id="2023-12-05-1854_medication_administration_note" author="Bahmni">
         <preConditions onFail="MARK_RAN" onError="WARN">
             <not>
-                <tableExists tableName="annotation"/>
+                <tableExists tableName="medication_administration_note"/>
             </not>
             <tableExists tableName="medication_administration"/>
         </preConditions>
-        <createTable tableName="annotation">
-            <column name="annotation_id" type="int" autoIncrement="true">
+        <createTable tableName="medication_administration_note">
+            <column name="medication_administration_note_id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="medication_administration_id" type="int"/>
@@ -140,11 +140,11 @@
             <column name="date_voided" type="datetime" />
             <column name="void_reason" type="varchar(255)" />
         </createTable>
-        <addForeignKeyConstraint constraintName="annotation_medication_administration_fk" baseTableName="annotation" baseColumnNames="medication_administration_id" referencedTableName="medication_administration" referencedColumnNames="medication_administration_id"/>
-        <addForeignKeyConstraint constraintName="annotation_provider_fk" baseTableName="annotation" baseColumnNames="author_id" referencedTableName="provider" referencedColumnNames="provider_id"/>
-        <addForeignKeyConstraint constraintName="annotation_creator_fk" baseTableName="annotation" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
-        <addForeignKeyConstraint constraintName="annotation_changed_by_fk" baseTableName="annotation" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
-        <addForeignKeyConstraint constraintName="annotation_voided_by_fk" baseTableName="annotation" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_medication_administration_fk" baseTableName="medication_administration_note" baseColumnNames="medication_administration_id" referencedTableName="medication_administration" referencedColumnNames="medication_administration_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_provider_fk" baseTableName="medication_administration_note" baseColumnNames="author_id" referencedTableName="provider" referencedColumnNames="provider_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_creator_fk" baseTableName="medication_administration_note" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_changed_by_fk" baseTableName="medication_administration_note" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_voided_by_fk" baseTableName="medication_administration_note" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
     <changeSet id="202312051854_medication_administration_privileges" author="Bahmni">
