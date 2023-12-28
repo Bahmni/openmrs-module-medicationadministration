@@ -164,4 +164,33 @@
             <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc47"/>
         </insert>
     </changeSet>
+    <changeSet id="202312121625_MA_status_concept_source" author="Bahmni">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from concept_reference_source where name = "HL7-MedicationAdministrationStatus";
+            </sqlCheck>
+        </preConditions>
+        <comment>Add concept source for medication administration status</comment>
+        <sql>
+            insert into concept_reference_source (name, description, hl7_code, creator, date_created, retired, uuid)
+            values("HL7-MedicationAdministrationStatus", "Source used to tag concepts used for medication administration status", "MAS", 1, now(), 0, uuid());
+        </sql>
+    </changeSet>
+
+    <changeSet id="202312121625_add_concept_related_procedures" author="Bahmni">
+        <comment>Creates procedures for adding concepts and its reference source mappings</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS add_concept;
+            DROP PROCEDURE IF EXISTS add_concept_reference_map;
+        </sql>
+        <sqlFile splitStatements="false" path="AddConceptProcedure.sql"/>
+        <sqlFile splitStatements="false" path="AddConceptReferenceMapProcedure.sql"/>
+    </changeSet>
+
+    <changeSet id="202312121625_add_MA_related_concepts" author="Bahmni">
+        <comment>Creates MA status and performer function concepts and relevant reference source mappings</comment>
+        <sqlFile splitStatements="true" path="MedicationAdministrationStatusConcepts.sql"/>
+        <sqlFile splitStatements="true" path="MedicationAdministrationPerformerFunctionConcepts.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
