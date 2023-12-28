@@ -27,8 +27,8 @@ BEGIN
     SELECT concept_datatype_id INTO data_type_id FROM concept_datatype WHERE name = data_type_name;
     SELECT concept_class_id INTO class_id FROM concept_class WHERE name = class_name;
 
-    INSERT INTO concept (datatype_id, class_id, is_set, creator, date_created, uuid)
-      VALUES (data_type_id, class_id, is_set_val, 1, now(), uuid());
+    INSERT INTO concept (datatype_id, class_id, is_set, creator, date_created, changed_by, date_changed, uuid)
+      VALUES (data_type_id, class_id, is_set_val, 1, now(), 1, now(), uuid());
     SELECT MAX(concept_id) INTO new_concept_id FROM concept;
 
     INSERT INTO concept_name (concept_id, name, locale, locale_preferred, creator, date_created, concept_name_type, uuid)
