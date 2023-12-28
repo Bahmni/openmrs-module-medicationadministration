@@ -30,6 +30,4 @@ public class FhirConstants {
 
 	public static final String MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER = "medicationAdministration.performer.search.handler";
 
-	public static final String MEDICATION_ADMINISTRATION_SUPPORT_INFO_SEARCH_HANDLER = "medicationAdministration.supportInfo.search.handler";
-
 }

@@ -31,11 +31,13 @@ public class MedicationAdministrationSearchParams extends BaseResourceSearchPara
 
 	private ReferenceAndListParam patientReference;
 
-	private ReferenceAndListParam supportingInfoReference;
+	private ReferenceAndListParam encounterReference;
 
-	private ReferenceAndListParam performerReference;
+	private ReferenceAndListParam medicationRequestReference;
 
 	private ReferenceAndListParam medicationReference;
+
+	private ReferenceAndListParam performerReference;
 
 	private TokenAndListParam status;
 
@@ -43,25 +45,33 @@ public class MedicationAdministrationSearchParams extends BaseResourceSearchPara
 
 	@Builder
 	public MedicationAdministrationSearchParams(ReferenceAndListParam patientReference,
-                                                ReferenceAndListParam supportingInfoReference, ReferenceAndListParam performerReference,
-                                                ReferenceAndListParam medicationReference, TokenAndListParam id, TokenAndListParam status, DateParam effectiveDate,
-                                                DateRangeParam lastUpdated, HashSet<Include> includes, HashSet<Include> revIncludes) {
+												ReferenceAndListParam encounterReference,
+												ReferenceAndListParam medicationRequestReference,
+												ReferenceAndListParam medicationReference,
+												ReferenceAndListParam performerReference,
+                                                TokenAndListParam id, TokenAndListParam status, DateParam effectiveDate,
+                                                DateRangeParam lastUpdated, HashSet<Include> includes,
+												HashSet<Include> revIncludes) {
 
 		super(id, lastUpdated, null, includes, revIncludes);
 
 		this.patientReference = patientReference;
-		this.supportingInfoReference = supportingInfoReference;
-		this.performerReference = performerReference;
+		this.encounterReference = encounterReference;
+		this.medicationRequestReference = medicationRequestReference;
 		this.medicationReference = medicationReference;
+		this.performerReference = performerReference;
 		this.effectiveDate = effectiveDate;
 		this.status = status;
 	}
 
 	@Override
 	public SearchParameterMap toSearchParameterMap() {
-		return baseSearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, getPatientReference());
-		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getPerformerReference());
-		        //.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_SUPPORT_INFO_SEARCH_HANDLER,
-		           // getSupportingInfoReference());
+		return baseSearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, getPatientReference())
+		        .addParameter(FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER, getEncounterReference())
+				.addParameter(FhirConstants.MEDICATION_REQUEST_REFERENCE_SEARCH_HANDLER, getEncounterReference())
+				.addParameter(FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER, getEncounterReference())
+				.addParameter(FhirConstants.STATUS_SEARCH_HANDLER, getEncounterReference())
+				.addParameter(FhirConstants.COMMON_SEARCH_HANDLER, getEncounterReference())
+				.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getEncounterReference());
 	}
 }
