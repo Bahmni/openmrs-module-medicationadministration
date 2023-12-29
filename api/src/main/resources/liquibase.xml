@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="2023-12-05-1854_medication_administration" author="Bahmni">
+        <preConditions onFail="MARK_RAN" onFailMessage="Table medication_administration already exists">
+            <not>
+                <tableExists tableName="medication_administration" />
+            </not>
+        </preConditions>
+        <comment>Creating medication_administration table</comment>
+        <createTable tableName="medication_administration">
+            <column name="medication_administration_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="patient_id" type="int"/>
+            <column name="encounter_id" type="int" />
+            <column name="drug_id" type="int" />
+            <column name="drug_order_id" type="int" />
+            <column name="status" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_reason" type="int" />
+            <column name="administered_date_time" type="datetime" />
+            <column name="dosing_instructions" type="text" />
+            <column name="dose" type="double" />
+            <column name="dose_units" type="int" />
+            <column name="route" type="int" />
+            <column name="site" type="int" />
+            <column name="notes" type="text" />
+            <column name="form_namespace_and_path" type="varchar(255)" />
+            <column name="creator" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="changed_by" type="int" />
+            <column name="date_changed" type="datetime" />
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="voided_by" type="int" />
+            <column name="date_voided" type="datetime" />
+            <column name="void_reason" type="varchar(255)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="medication_administration_patient_fk" baseTableName="medication_administration" baseColumnNames="patient_id" referencedTableName="patient" referencedColumnNames="patient_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_encounter_fk" baseTableName="medication_administration" baseColumnNames="encounter_id" referencedTableName="encounter" referencedColumnNames="encounter_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_drug_fk" baseTableName="medication_administration" baseColumnNames="drug_id" referencedTableName="drug" referencedColumnNames="drug_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_drug_order_fk" baseTableName="medication_administration" baseColumnNames="drug_order_id" referencedTableName="drug_order" referencedColumnNames="order_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_status_fk" baseTableName="medication_administration" baseColumnNames="status" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_status_reason_fk" baseTableName="medication_administration" baseColumnNames="status_reason" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_dose_units_fk" baseTableName="medication_administration" baseColumnNames="dose_units" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_route_fk" baseTableName="medication_administration" baseColumnNames="route" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_site_fk" baseTableName="medication_administration" baseColumnNames="site" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_creator_fk" baseTableName="medication_administration" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_changed_by_fk" baseTableName="medication_administration" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_voided_by_fk" baseTableName="medication_administration" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="2023-12-05-1854_medication_administration_performer" author="Bahmni">
+        <preConditions onFail="MARK_RAN" onError="WARN">
+            <not>
+                <tableExists tableName="medication_administration_performer"/>
+            </not>
+            <tableExists tableName="medication_administration"/>
+        </preConditions>
+        <createTable tableName="medication_administration_performer">
+            <column name="medication_administration_performer_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="medication_administration_id" type="int"/>
+            <column name="actor_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="function" type="int"/>
+            <column name="uuid" type="varchar(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="form_namespace_and_path" type="varchar(255)" />
+            <column name="creator" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="changed_by" type="int" />
+            <column name="date_changed" type="datetime" />
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="voided_by" type="int" />
+            <column name="date_voided" type="datetime" />
+            <column name="void_reason" type="varchar(255)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_fk" baseTableName="medication_administration_performer" baseColumnNames="medication_administration_id" referencedTableName="medication_administration" referencedColumnNames="medication_administration_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_provider_fk" baseTableName="medication_administration_performer" baseColumnNames="actor_id" referencedTableName="provider" referencedColumnNames="provider_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_fn_fk" baseTableName="medication_administration_performer" baseColumnNames="function" referencedTableName="concept" referencedColumnNames="concept_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_creator_fk" baseTableName="medication_administration_performer" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_changed_by_fk" baseTableName="medication_administration_performer" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_performer_voided_by_fk" baseTableName="medication_administration_performer" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="2023-12-05-1854_medication_administration_note" author="Bahmni">
+        <preConditions onFail="MARK_RAN" onError="WARN">
+            <not>
+                <tableExists tableName="medication_administration_note"/>
+            </not>
+            <tableExists tableName="medication_administration"/>
+        </preConditions>
+        <createTable tableName="medication_administration_note">
+            <column name="medication_administration_note_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="medication_administration_id" type="int"/>
+            <column name="author_id" type="int"/>
+            <column name="recorded_time" type="datetime"/>
+            <column name="text" type="text"/>
+            <column name="uuid" type="varchar(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="changed_by" type="int" />
+            <column name="date_changed" type="datetime" />
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="voided_by" type="int" />
+            <column name="date_voided" type="datetime" />
+            <column name="void_reason" type="varchar(255)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="medication_administration_note_medication_administration_fk" baseTableName="medication_administration_note" baseColumnNames="medication_administration_id" referencedTableName="medication_administration" referencedColumnNames="medication_administration_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_provider_fk" baseTableName="medication_administration_note" baseColumnNames="author_id" referencedTableName="provider" referencedColumnNames="provider_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_creator_fk" baseTableName="medication_administration_note" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_changed_by_fk" baseTableName="medication_administration_note" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_note_voided_by_fk" baseTableName="medication_administration_note" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="202312051854_medication_administration_privileges" author="Bahmni">
+        <insert tableName="privilege">
+            <column name="privilege" value="Get Medication Administrations"/>
+            <column name="description" value="Able to get Medication Administrations"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc45"/>
+        </insert>
+        <insert tableName="privilege">
+            <column name="privilege" value="Edit Medication Administration"/>
+            <column name="description" value="Able to edit Medication Administration"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc46"/>
+        </insert>
+        <insert tableName="privilege">
+            <column name="privilege" value="Delete Medication Administration"/>
+            <column name="description" value="Able to delete Medication Administration"/>
+            <column name="uuid" value="d96940c3-bedb-43b0-8c5c-1a635ea4bc47"/>
+        </insert>
+    </changeSet>
+    <changeSet id="202312121625_MA_status_concept_source" author="Bahmni">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from concept_reference_source where name = "HL7-MedicationAdministrationStatus";
+            </sqlCheck>
+        </preConditions>
+        <comment>Add concept source for medication administration status</comment>
+        <sql>
+            insert into concept_reference_source (name, description, hl7_code, creator, date_created, retired, uuid)
+            values("HL7-MedicationAdministrationStatus", "Source used to tag concepts used for medication administration status", "MAS", 1, now(), 0, uuid());
+        </sql>
+    </changeSet>
+
+    <changeSet id="202312121625_add_concept_related_procedures" author="Bahmni">
+        <comment>Creates procedures for adding concepts and its reference source mappings</comment>
+        <sql>
+            DROP PROCEDURE IF EXISTS add_concept;
+            DROP PROCEDURE IF EXISTS add_concept_reference_map;
+        </sql>
+        <sqlFile splitStatements="false" path="AddConceptProcedure.sql"/>
+        <sqlFile splitStatements="false" path="AddConceptReferenceMapProcedure.sql"/>
+    </changeSet>
+
+    <changeSet id="202312121625_add_MA_related_concepts" author="Bahmni">
+        <comment>Creates MA status and performer function concepts and relevant reference source mappings</comment>
+        <sqlFile splitStatements="true" path="MedicationAdministrationStatusConcepts.sql"/>
+        <sqlFile splitStatements="true" path="MedicationAdministrationPerformerFunctionConcepts.sql"/>
+    </changeSet>
+
+</databaseChangeLog>
