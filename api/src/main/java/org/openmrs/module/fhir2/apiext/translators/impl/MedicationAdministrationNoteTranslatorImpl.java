@@ -15,12 +15,15 @@ import lombok.Setter;
 import org.hl7.fhir.r4.model.Reference;
 import org.openmrs.Provider;
 import org.openmrs.module.fhir2.api.translators.PractitionerReferenceTranslator;
+import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationNoteDao;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
 import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+
+import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -30,6 +33,9 @@ public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdm
 
     @Autowired
     private PractitionerReferenceTranslator<Provider> practitionerReferenceTranslator;
+
+    @Autowired
+    private FhirMedicationAdministrationNoteDao fhirMedicationAdministrationNoteDao;
 
 
     @Override
@@ -52,7 +58,8 @@ public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdm
     @Override
     public MedicationAdministrationNote toOpenmrsType(@Nonnull org.hl7.fhir.r4.model.Annotation fhirObject) {
         notNull(fhirObject, "The Fhir Annotation object should not be null");
-        return this.toOpenmrsType(new MedicationAdministrationNote(), fhirObject);
+        return this.toOpenmrsType(Optional.ofNullable(fhirMedicationAdministrationNoteDao.get(fhirObject.getId()))
+                .orElseGet(() -> new MedicationAdministrationNote()), fhirObject);
     }
 
     @Override

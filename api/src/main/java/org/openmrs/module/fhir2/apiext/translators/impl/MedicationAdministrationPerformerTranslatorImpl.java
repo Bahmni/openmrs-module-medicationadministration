@@ -17,12 +17,15 @@ import org.hl7.fhir.r4.model.Reference;
 import org.openmrs.Provider;
 import org.openmrs.module.fhir2.api.translators.ConceptTranslator;
 import org.openmrs.module.fhir2.api.translators.PractitionerReferenceTranslator;
+import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationPerformerDao;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
 import org.openmrs.module.ipd.api.model.MedicationAdministrationPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+
+import java.util.Optional;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -32,6 +35,9 @@ public class MedicationAdministrationPerformerTranslatorImpl implements Medicati
 
     @Autowired
     private ConceptTranslator conceptTranslator;
+
+    @Autowired
+    private FhirMedicationAdministrationPerformerDao fhirMedicationAdministrationPerformerDao;
 
     @Autowired
     private PractitionerReferenceTranslator<Provider> practitionerReferenceTranslator;
@@ -54,7 +60,8 @@ public class MedicationAdministrationPerformerTranslatorImpl implements Medicati
     @Override
     public MedicationAdministrationPerformer toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationPerformerComponent fhirObject) {
         notNull(fhirObject, "The Fhir MedicationAdministration.MedicationAdministrationPerformerComponent object should not be null");
-        return this.toOpenmrsType(new MedicationAdministrationPerformer(), fhirObject);
+        return this.toOpenmrsType(Optional.ofNullable(fhirMedicationAdministrationPerformerDao.get(fhirObject.getId()))
+                .orElseGet(() -> new MedicationAdministrationPerformer()), fhirObject);
     }
 
     @Override
