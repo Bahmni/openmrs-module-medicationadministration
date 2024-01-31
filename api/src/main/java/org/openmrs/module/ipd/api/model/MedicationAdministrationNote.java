@@ -13,7 +13,6 @@ import org.openmrs.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * The MedicationAdministrationNote class records a text note which also contains information about who made the statement and when.
@@ -105,23 +104,6 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null || getClass() != obj.getClass()) return false;
-
-		MedicationAdministrationNote other = (MedicationAdministrationNote) obj;
-		boolean yes= Objects.equals(this.medicationAdministrationNoteId, other.medicationAdministrationNoteId)
-				|| Objects.equals(this.getUuid(),other.getUuid());
-		return yes;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = Objects.hash(this.getUuid());
-		return hash;
 	}
 
 }
