@@ -12,7 +12,6 @@ package org.openmrs.module.ipd.api.model;
 import org.openmrs.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * The MedicationAdministration class records detailed information about the provision of a supply of a medication
@@ -94,23 +93,6 @@ public class MedicationAdministrationPerformer extends BaseFormRecordableOpenmrs
 
 	public void setFunction(Concept function) {
 		this.function = function;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null || getClass() != obj.getClass()) return false;
-
-		MedicationAdministrationPerformer other = (MedicationAdministrationPerformer) obj;
-		boolean yes= Objects.equals(this.medicationAdministrationPerformerId, other.medicationAdministrationPerformerId)
-				|| Objects.equals(this.getUuid(),other.getUuid());
-		return yes;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = Objects.hash(this.getUuid());
-		return hash;
 	}
 
 }
