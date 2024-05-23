@@ -119,7 +119,7 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
                     criteria.createAlias(property, alias);
                 }
 
-                List<Optional<Criterion>> criterionList = new ArrayList<>();
+                List<Optional<? extends Criterion>> criterionList = new ArrayList<>();
                 criterionList.add(Optional.of(eq(String.format("%s.targetUuid", alias), param.getIdPart())));
                 criterionList.add(Optional.of(eq(String.format("%s.type", alias), param.getResourceType())));
                 return Optional.of(and(toCriteriaArray(criterionList)));
@@ -141,7 +141,7 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
                         criteria.createAlias(property, alias);
                     }
 
-                    List<Optional<Criterion>> criterionList = new ArrayList<>();
+                    List<Optional<? extends Criterion>> criterionList = new ArrayList<>();
                     criterionList.add(Optional.of(eq(String.format("%s.targetUuid", alias), param.getIdPart())));
                     criterionList.add(Optional.of(eq(String.format("%s.type", alias), param.getResourceType())));
                     return Optional.of(and(toCriteriaArray(criterionList)));
