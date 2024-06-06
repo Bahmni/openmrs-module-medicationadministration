@@ -3,7 +3,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
     <changeSet id="2023-12-05-1854_medication_administration" author="Bahmni">
         <preConditions onFail="MARK_RAN" onFailMessage="Table medication_administration already exists">
@@ -64,7 +64,7 @@
         <addForeignKeyConstraint constraintName="medication_administration_voided_by_fk" baseTableName="medication_administration" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
-    <changeSet id="2023-12-05-1854_medication_administration_performer" author="Bahmni">
+    <changeSet id="2023-12-05-1854_medication_administration_performer__BAH-3928" author="Bahmni" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
         <preConditions onFail="MARK_RAN" onError="WARN">
             <not>
                 <tableExists tableName="medication_administration_performer"/>
@@ -105,6 +105,17 @@
         <addForeignKeyConstraint constraintName="medication_administration_performer_creator_fk" baseTableName="medication_administration_performer" baseColumnNames="creator" referencedTableName="users" referencedColumnNames="user_id"/>
         <addForeignKeyConstraint constraintName="medication_administration_performer_changed_by_fk" baseTableName="medication_administration_performer" baseColumnNames="changed_by" referencedTableName="users" referencedColumnNames="user_id"/>
         <addForeignKeyConstraint constraintName="medication_administration_performer_voided_by_fk" baseTableName="medication_administration_performer" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="2024-06-06-1650_fix_column_name_BAH-3928" author="Bahmni" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <preConditions onFail="MARK_RAN" onError="WARN">
+                <columnExists tableName="medication_administration_performer" columnName="function"/>
+        </preConditions>
+        <comment>Fix column name to avoid the usage of reserved keywords of MySQL</comment>
+        <renameColumn tableName="medication_administration_performer" 
+                      oldColumnName="function"
+                      newColumnName="performer_function"
+                      columnDataType="int" />
     </changeSet>
 
     <changeSet id="2023-12-05-1854_medication_administration_note" author="Bahmni">

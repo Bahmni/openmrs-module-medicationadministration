@@ -49,7 +49,7 @@ public class MedicationAdministrationPerformer extends BaseFormRecordableOpenmrs
 	 * i.e. performer, verifier, witness
 	 */
 	@ManyToOne(optional = true)
-	@JoinColumn(name = "function")
+	@JoinColumn(name = "performer_function")
 	private Concept function;
 
 	public MedicationAdministrationPerformer() {
