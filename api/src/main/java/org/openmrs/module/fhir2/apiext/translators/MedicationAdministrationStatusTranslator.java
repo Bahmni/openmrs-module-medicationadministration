@@ -9,18 +9,17 @@
  */
 package org.openmrs.module.fhir2.apiext.translators;
 
-import javax.annotation.Nonnull;
-
 import org.hl7.fhir.r4.model.MedicationAdministration;
-import org.openmrs.Concept;
 import org.openmrs.module.fhir2.api.translators.ToFhirTranslator;
 import org.openmrs.module.fhir2.api.translators.ToOpenmrsTranslator;
 
-public interface MedicationAdministrationStatusTranslator extends ToFhirTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus>, ToOpenmrsTranslator<Concept, MedicationAdministration.MedicationAdministrationStatus> {
+import javax.annotation.Nonnull;
+
+public interface MedicationAdministrationStatusTranslator extends ToFhirTranslator<String, MedicationAdministration.MedicationAdministrationStatus>, ToOpenmrsTranslator<String, MedicationAdministration.MedicationAdministrationStatus> {
 
     @Override
-    MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull Concept concept);
+    MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull String concept);
 
     @Override
-    Concept toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus resource);
+    String toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus resource);
 }

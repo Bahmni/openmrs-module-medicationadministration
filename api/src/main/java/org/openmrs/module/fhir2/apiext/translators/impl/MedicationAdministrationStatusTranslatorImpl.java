@@ -10,21 +10,17 @@
 
 package org.openmrs.module.fhir2.apiext.translators.impl;
 
-import javax.annotation.Nonnull;
-
-import java.util.Optional;
-
 import lombok.AccessLevel;
 import lombok.Setter;
-import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.MedicationAdministration;
-import org.openmrs.Concept;
 import org.openmrs.ConceptSource;
-import org.openmrs.module.fhir2.api.FhirConceptService;
 import org.openmrs.module.fhir2.api.FhirConceptSourceService;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationStatusTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @Component
 @Setter(AccessLevel.PACKAGE)
@@ -35,38 +31,19 @@ public class MedicationAdministrationStatusTranslatorImpl implements MedicationA
     @Autowired
     FhirConceptSourceService conceptSourceService;
 
-    @Autowired
-    FhirConceptService conceptService;
-
     @Override
-    public MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull Concept concept) {
+    public MedicationAdministration.MedicationAdministrationStatus toFhirResource(@Nonnull String concept) {
         Optional<ConceptSource> conceptSource = conceptSourceService.getConceptSourceByUrl(CONCEPT_SOURCE_URI);
         if (conceptSource.isPresent()) {
-            Optional<String> conceptCode = conceptService.getSameAsMappingForConceptInSource(conceptSource.get(), concept);
-            if (conceptCode.isPresent()) {
-                try {
-                    return MedicationAdministration.MedicationAdministrationStatus.fromCode(conceptCode.get());
-                }
-                catch (FHIRException ignored) {
-                    // unknown status code
-                }
-            }
+            return MedicationAdministration.MedicationAdministrationStatus.fromCode(concept);
         }
-
         return null;
     }
 
     @Override
-    public Concept toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus status) {
-        Optional<Concept> concept = Optional.empty();
-
-        if (status != null) {
-            Optional<ConceptSource> conceptSource = conceptSourceService.getConceptSourceByUrl(CONCEPT_SOURCE_URI);
-            if (conceptSource.isPresent()) {
-                concept = conceptService.getConceptWithSameAsMappingInSource(conceptSource.get(), status.toCode());
-            }
-        }
-
-        return concept.orElse(null);
+    public String toOpenmrsType(@Nonnull MedicationAdministration.MedicationAdministrationStatus status) {
+        String concept;
+        concept = status.toCode();
+        return concept;
     }
 }

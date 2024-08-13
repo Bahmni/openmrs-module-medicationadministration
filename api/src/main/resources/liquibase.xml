@@ -204,4 +204,12 @@
         <sqlFile splitStatements="true" path="MedicationAdministrationPerformerFunctionConcepts.sql"/>
     </changeSet>
 
+    <changeSet id="130820240756BAH4061" author="Bahmni">
+        <dropForeignKeyConstraint baseTableName="medication_administration" constraintName="medication_administration_status_fk"/>
+    </changeSet>
+
+    <changeSet id="130820240752BAH4061" author="Bahmni">
+        <modifyDataType columnName="status" newDataType="varchar(255)" tableName="medication_administration"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -86,9 +86,8 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	 *     	</a>
 	 * i.e. in-progress, cancelled, on-hold, completed, entered-in-error, stopped, declined, unknown
 	 */
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "status")
-	private Concept status;
+	@Column(nullable = false)
+	private String status;
 
 	/**
 	 * FHIR:statusReason.statusReasonCodeableConcept
@@ -225,11 +224,11 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 		this.drugOrder = drugOrder;
 	}
 
-	public Concept getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Concept status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
