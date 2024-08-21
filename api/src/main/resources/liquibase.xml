@@ -212,4 +212,10 @@
         <modifyDataType columnName="status" newDataType="varchar(255)" tableName="medication_administration"/>
     </changeSet>
 
+    <changeSet id="140820240842BAH4061" author="Bahmni">
+        <update tableName="medication_administration">
+            <column name="status" valueComputed="(select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status)"/>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
