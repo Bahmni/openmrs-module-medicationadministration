@@ -25,7 +25,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.translators.*;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationStatusTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
 import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
 import org.openmrs.module.ipd.api.model.MedicationAdministration;
@@ -40,9 +39,6 @@ import java.util.Set;
 @Component
 @Setter(AccessLevel.PACKAGE)
 public class MedicationAdministrationTranslatorImpl implements MedicationAdministrationTranslator<MedicationAdministration> {
-
-	@Autowired
-	private MedicationAdministrationStatusTranslator statusTranslator;
 
 	@Autowired
 	private PatientReferenceTranslator patientReferenceTranslator;
@@ -76,7 +72,7 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 		if (openmrsObject.getAdministeredDateTime() != null) {
 			fhirObject.setEffective(new DateTimeType(openmrsObject.getAdministeredDateTime()));
 		}
-		fhirObject.setStatus(statusTranslator.toFhirResource(openmrsObject.getStatus()));
+		fhirObject.setStatus(openmrsObject.getStatus());
 		if (openmrsObject.getStatusReason() != null) {
 			fhirObject.setStatusReason(Collections.singletonList(conceptTranslator.toFhirResource(openmrsObject.getStatusReason())));
 		}
@@ -151,7 +147,7 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 			openmrsObject.setAdministeredDateTime(fhirObject.getEffectiveDateTimeType().getValue());
 		}
 		if (fhirObject.hasStatus()) {
-			openmrsObject.setStatus(statusTranslator.toOpenmrsType(fhirObject.getStatus()));
+			openmrsObject.setStatus(fhirObject.getStatus());
 		}
 		if (fhirObject.hasStatusReason()) {
 			openmrsObject.setStatusReason(conceptTranslator.toOpenmrsType(fhirObject.getStatusReason().get(0)));
