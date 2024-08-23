@@ -204,4 +204,28 @@
         <sqlFile splitStatements="true" path="MedicationAdministrationPerformerFunctionConcepts.sql"/>
     </changeSet>
 
+    <changeSet id="130820240756BAH4061" author="Bahmni">
+        <dropForeignKeyConstraint baseTableName="medication_administration" constraintName="medication_administration_status_fk"/>
+    </changeSet>
+
+    <changeSet id="130820240752BAH4061" author="Bahmni">
+        <modifyDataType columnName="status" newDataType="varchar(255)" tableName="medication_administration"/>
+    </changeSet>
+
+    <changeSet id="140820240842BAH4061" author="Bahmni">
+        <update tableName="medication_administration">
+            <column name="status"
+                    valueComputed="(CASE
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'in-progress' THEN 'INPROGRESS'
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'not-done' THEN 'NOTDONE'
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'on-hold' THEN 'ONHOLD'
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'completed' THEN 'COMPLETED'
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'entered-in-error' THEN 'ENTEREDINERROR'
+                        WHEN (select concept_reference_term_map_view.code from concept_reference_term_map_view where concept_reference_term_map_view.concept_id = medication_administration.status) = 'stopped' THEN 'STOPPED'
+                        ELSE 'UNKNOWN'
+                    END)">
+            </column>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
