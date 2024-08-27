@@ -2,12 +2,13 @@
 
 <module configVersion="1.2">
 
-	<id>medication-administration</id>
-	<name>Medication Administration</name>
-	<version>1.0.0-SNAPSHOT</version>
-	<package>org.bahmni.module.medication-administration</package>
+	<!-- Base Module Properties -->
+	<id>${project.parent.artifactId}</id>
+	<name>${project.parent.name}</name>
+	<version>${project.parent.version}</version>
+	<package>${MODULE_PACKAGE}</package>
 	<author>Bahmni</author>
-	<description>Medication Administration module contains DB modelling and FHIR translation layers for medication administration</description>
+	<description>${project.parent.description}</description>
 
 	<require_modules>
 		<require_module>org.openmrs.module.webservices.rest</require_module>
