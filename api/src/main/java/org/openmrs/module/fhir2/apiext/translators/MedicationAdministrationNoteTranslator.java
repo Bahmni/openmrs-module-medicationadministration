@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public interface MedicationAdministrationNoteTranslator<T> extends OpenmrsFhirUpdatableTranslator<T, Annotation> {
 
     /**
-     * Maps <T> an OpenMRS representation of a medication administration note to a {@link Annotation}
+     * Maps {@link T} an OpenMRS representation of a medication administration note to a {@link Annotation}
      *
      * @param openmrsObject the OpenMRS representation to translate
      * @return the corresponding FHIR condition resource
@@ -34,7 +34,7 @@ public interface MedicationAdministrationNoteTranslator<T> extends OpenmrsFhirUp
     T toOpenmrsType(@Nonnull Annotation fhirObject);
 
     /**
-     * Maps a {@link Annotation} to an existing <T> OpenMRS representation
+     * Maps a {@link Annotation} to an existing {@link T} OpenMRS representation
      *
      * @param openmrsObject the existing OpenMRS representation to update
      * @param fhirObject the condition to map
