@@ -36,7 +36,7 @@
 	</modules>
 
 	<properties>
-		<openmrsPlatformVersion>2.5.12</openmrsPlatformVersion>
+		<openmrsPlatformVersion>2.6.15</openmrsPlatformVersion>
 		<springVersion>5.2.14.RELEASE</springVersion>
 		<junitVersion>4.13</junitVersion>
 		<powerMockVersion>2.0.7</powerMockVersion>
@@ -45,7 +45,7 @@
 		<argLine>-Xmx1024m</argLine>
 		<jacocoVersion>0.7.9</jacocoVersion>
 		<lombokVersion>1.18.26</lombokVersion>
-		<openmrsFhir2Version>2.1.0</openmrsFhir2Version>
+		<openmrsFhir2Version>2.5.0</openmrsFhir2Version>
 	</properties>
 
 	<build>
