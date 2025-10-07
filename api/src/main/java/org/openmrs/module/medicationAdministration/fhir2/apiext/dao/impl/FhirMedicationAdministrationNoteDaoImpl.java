@@ -1,8 +1,8 @@
-package org.openmrs.module.fhir2.apiext.dao.impl;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.dao.impl;
 
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
-import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationNoteDao;
-import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.dao.FhirMedicationAdministrationNoteDao;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministrationNote;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;

@@ -1,4 +1,4 @@
-package org.openmrs.module.fhir2.apiext;
+package org.openmrs.module.medicationAdministration.fhir2.apiext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,11 +12,11 @@ public class MedicationAdministrationActivator extends BaseModuleActivator {
 	private final Log log = LogFactory.getLog(this.getClass());
 	
 	public void startup() {
-		System.out.println("Starting Medication Administration Module");
+		log.debug("Starting Medication Administration Module");
 	}
 	
 	public void shutdown() {
-		System.out.println("Shutting down Medication Administration Module");
+		log.debug("Shutting down Medication Administration Module");
 	}
 	
 }

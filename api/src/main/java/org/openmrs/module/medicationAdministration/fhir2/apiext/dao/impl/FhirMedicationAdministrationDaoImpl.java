@@ -7,7 +7,7 @@
 * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
 * graphic logo is a trademark of OpenMRS Inc.
 */
-package org.openmrs.module.fhir2.apiext.dao.impl;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.dao.impl;
 
 import static org.hibernate.criterion.Restrictions.*;
 
@@ -26,10 +26,10 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hl7.fhir.r4.model.MedicationRequest;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.module.ipd.api.model.MedicationAdministration;
-import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.medicationAdministration.fhir2.FhirConstants;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministration;
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
-import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.util.PrivilegeConstants;
 import org.springframework.stereotype.Component;
@@ -63,19 +63,19 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
     protected void setupSearchParams(Criteria criteria, SearchParameterMap theParams) {
         theParams.getParameters().forEach(entry -> {
         switch (entry.getKey()) {
-            case FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER:
+            case org.openmrs.module.medicationAdministration.fhir2.FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER:
                 entry.getValue()
                 .forEach(e -> handleEncounterReference(criteria, (ReferenceAndListParam) e.getParam(), "e"));
                 break;
-            case FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER:
+            case org.openmrs.module.medicationAdministration.fhir2.FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER:
                 entry.getValue().forEach(patientReference -> handleReference(criteria,
                 (ReferenceAndListParam) patientReference.getParam(), "subjectReference", "s"));
                 break;
-            case FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER:
+            case org.openmrs.module.medicationAdministration.fhir2.FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER:
                 entry.getValue().forEach(d -> handleMedicationReference("d", (ReferenceAndListParam) d.getParam())
                 .ifPresent(c -> criteria.createAlias("drug", "d").add(c)));
                 break;
-            case FhirConstants.STATUS_SEARCH_HANDLER:
+            case org.openmrs.module.medicationAdministration.fhir2.FhirConstants.STATUS_SEARCH_HANDLER:
                 entry.getValue()
                 .forEach(param -> handleStatus((TokenAndListParam) param.getParam()).ifPresent(criteria::add));
                 break;

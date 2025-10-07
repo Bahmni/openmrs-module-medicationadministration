@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.apiext.search.param;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.search.param;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.param.DateParam;
@@ -18,7 +18,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.medicationAdministration.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.search.param.BaseResourceSearchParams;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 

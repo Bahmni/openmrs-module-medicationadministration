@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.apiext.translators.impl;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.translators.impl;
 
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.openmrs.module.fhir2.api.translators.impl.FhirTranslatorUtils.getLastUpdated;
@@ -23,12 +23,12 @@ import org.hl7.fhir.r4.model.SimpleQuantity;
 import org.openmrs.Encounter;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.translators.*;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
-import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
-import org.openmrs.module.ipd.api.model.MedicationAdministration;
-import org.openmrs.module.ipd.api.model.MedicationAdministrationPerformer;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.translators.MedicationAdministrationTranslator;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministrationNote;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministration;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministrationPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

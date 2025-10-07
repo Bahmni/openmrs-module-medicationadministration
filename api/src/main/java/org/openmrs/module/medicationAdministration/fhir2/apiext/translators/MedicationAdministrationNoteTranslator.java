@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.apiext.translators;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.translators;
 
 import org.hl7.fhir.r4.model.Annotation;
 import org.openmrs.module.fhir2.api.translators.OpenmrsFhirUpdatableTranslator;

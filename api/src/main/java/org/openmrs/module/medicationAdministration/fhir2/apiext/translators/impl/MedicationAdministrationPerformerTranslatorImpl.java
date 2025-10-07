@@ -8,7 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-package org.openmrs.module.fhir2.apiext.translators.impl;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.translators.impl;
 
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -17,9 +17,9 @@ import org.hl7.fhir.r4.model.Reference;
 import org.openmrs.Provider;
 import org.openmrs.module.fhir2.api.translators.ConceptTranslator;
 import org.openmrs.module.fhir2.api.translators.PractitionerReferenceTranslator;
-import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationPerformerDao;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
-import org.openmrs.module.ipd.api.model.MedicationAdministrationPerformer;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.dao.FhirMedicationAdministrationPerformerDao;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
+import org.openmrs.module.medicationAdministration.model.MedicationAdministrationPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

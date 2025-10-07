@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.fhir2.apiext.impl;
+package org.openmrs.module.medicationAdministration.fhir2.apiext.impl;
 
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import lombok.AccessLevel;
@@ -15,19 +15,19 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.openmrs.module.fhir2.api.impl.BaseFhirService;
-import org.openmrs.module.fhir2.apiext.FhirMedicationAdministrationService;
-import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.FhirMedicationAdministrationService;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.dao.FhirMedicationAdministrationDao;
 import org.openmrs.module.fhir2.api.search.SearchQuery;
 import org.openmrs.module.fhir2.api.search.SearchQueryInclude;
-import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
-import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
+import org.openmrs.module.medicationAdministration.fhir2.apiext.translators.MedicationAdministrationTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PROTECTED)
-public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration, org.openmrs.module.ipd.api.model.MedicationAdministration> implements FhirMedicationAdministrationService {
+public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<MedicationAdministration, org.openmrs.module.medicationAdministration.model.MedicationAdministration> implements FhirMedicationAdministrationService {
 	
 	@Autowired
 	private MedicationAdministrationTranslator translator;
@@ -39,7 +39,7 @@ public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<Med
 	private SearchQueryInclude<MedicationAdministration> searchQueryInclude;
 
 	@Autowired
-	private SearchQuery<org.openmrs.module.ipd.api.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.ipd.api.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.ipd.api.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
+	private SearchQuery<org.openmrs.module.medicationAdministration.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.medicationAdministration.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.medicationAdministration.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
 
 	@Override
 	public IBundleProvider searchForMedicationAdministration(
