@@ -18,6 +18,6 @@
         <require_module>org.openmrs.module.fhir2</require_module>
     </require_modules>
 
-    <activator>org.openmrs.module.fhir2.apiext.MedicationAdministrationActivator</activator>
+    <activator>org.openmrs.module.medicationAdministration.fhir2.apiext.MedicationAdministrationActivator</activator>
 
 </module>
