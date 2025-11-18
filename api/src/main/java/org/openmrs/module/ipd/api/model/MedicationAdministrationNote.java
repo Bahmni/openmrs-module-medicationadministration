@@ -55,6 +55,44 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 	@Column(name = "text", length=65535)
 	private String text;
 
+	/**
+	 * Amended text - the updated text when note is amended
+	 */
+	@Column(name = "amended_text", length=65535, nullable = true)
+	private String amendedText;
+
+	/**
+	 * Amendment reason - why this note was amended
+	 */
+	@Column(name = "amended_reason", nullable = true)
+	private String amendedReason;
+
+	/**
+	 * Provider who approved this amendment
+	 */
+	@OneToOne(optional = true)
+	@JoinColumn(name = "approved_by_id", nullable = true)
+	private Provider approvedBy;
+
+	/**
+	 * Date and time when the amendment was approved
+	 */
+	@Column(name = "approved_date_time", nullable = true)
+	private Date approvedDateTime;
+
+	/**
+	 * Status of the approval (PENDING, APPROVED, REJECTED)
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(name = "approval_status", nullable = true)
+	private ApprovalStatus approvalStatus;
+
+	/**
+	 * Notes related to the approval decision
+	 */
+	@Column(name = "approval_notes", length=65535, nullable = true)
+	private String approvalNotes;
+
 	public MedicationAdministrationNote() {
 	}
 
@@ -104,6 +142,54 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getAmendedText() {
+		return amendedText;
+	}
+
+	public void setAmendedText(String amendedText) {
+		this.amendedText = amendedText;
+	}
+
+	public String getAmendedReason() {
+		return amendedReason;
+	}
+
+	public void setAmendedReason(String amendedReason) {
+		this.amendedReason = amendedReason;
+	}
+
+	public Provider getApprovedBy() {
+		return approvedBy;
+	}
+
+	public void setApprovedBy(Provider approvedBy) {
+		this.approvedBy = approvedBy;
+	}
+
+	public Date getApprovedDateTime() {
+		return approvedDateTime;
+	}
+
+	public void setApprovedDateTime(Date approvedDateTime) {
+		this.approvedDateTime = approvedDateTime;
+	}
+
+	public ApprovalStatus getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(ApprovalStatus approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
+	public String getApprovalNotes() {
+		return approvalNotes;
+	}
+
+	public void setApprovalNotes(String approvalNotes) {
+		this.approvalNotes = approvalNotes;
 	}
 
 }
