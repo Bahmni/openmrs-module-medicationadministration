@@ -228,4 +228,106 @@
         </update>
     </changeSet>
 
+    <changeSet id="20250122-extend-med-note-amendment" author="bahmni">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="medication_administration_note" columnName="previous_note_id"/>
+            </not>
+        </preConditions>
+        <comment>Extend medication_administration_note for amendment tracking</comment>
+        <addColumn tableName="medication_administration_note">
+            <column name="previous_note_id" type="int">
+                <constraints foreignKeyName="fk_med_admin_note_previous"
+                             references="medication_administration_note(medication_administration_note_id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="medication_administration_note">
+            <column name="amendment_reason" type="text"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20250122-create-med-ack" author="bahmni">
+        <preConditions onFail="MARK_RAN" onError="WARN">
+            <not>
+                <tableExists tableName="medication_administration_acknowledgement"/>
+            </not>
+            <tableExists tableName="medication_administration"/>
+        </preConditions>
+        <comment>Create medication_administration_acknowledgement table for audit trail</comment>
+        <createTable tableName="medication_administration_acknowledgement">
+            <column name="acknowledgement_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="medication_administration_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_datetime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remarks" type="text"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medication_administration_ack_med_admin_fk"
+                                 baseTableName="medication_administration_acknowledgement"
+                                 baseColumnNames="medication_administration_id"
+                                 referencedTableName="medication_administration"
+                                 referencedColumnNames="medication_administration_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_ack_provider_fk"
+                                 baseTableName="medication_administration_acknowledgement"
+                                 baseColumnNames="provider_id"
+                                 referencedTableName="provider"
+                                 referencedColumnNames="provider_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_ack_creator_fk"
+                                 baseTableName="medication_administration_acknowledgement"
+                                 baseColumnNames="creator"
+                                 referencedTableName="users"
+                                 referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_ack_changed_by_fk"
+                                 baseTableName="medication_administration_acknowledgement"
+                                 baseColumnNames="changed_by"
+                                 referencedTableName="users"
+                                 referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medication_administration_ack_voided_by_fk"
+                                 baseTableName="medication_administration_acknowledgement"
+                                 baseColumnNames="voided_by"
+                                 referencedTableName="users"
+                                 referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="20250122-add-approve-amend-privilege" author="bahmni">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM privilege WHERE privilege = 'Approve Amendment Note'
+            </sqlCheck>
+        </preConditions>
+        <comment>Add privilege for acknowledging/approving amendment notes</comment>
+        <insert tableName="privilege">
+            <column name="privilege" value="Approve Amendment Note"/>
+            <column name="description" value="Able to acknowledge/approve amendment notes on medication administration"/>
+            <column name="uuid" value="a8b9c1d2-3e4f-5a6b-7c8d-9e0f1a2b3c4d"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

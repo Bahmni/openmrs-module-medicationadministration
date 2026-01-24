@@ -12,4 +12,14 @@ public interface FhirMedicationAdministrationNoteDao extends FhirDao<MedicationA
     @Override
     @Authorized(PrivilegeConstants.GET_MEDICATION_ADMINISTRATIONS)
     MedicationAdministrationNote get(@Nonnull String uuid);
+
+    /**
+     * Get the latest (most recent) note for a medication administration.
+     * This is used when creating an amendment to link to the previous note.
+     *
+     * @param medicationAdministrationId the internal ID of the medication administration
+     * @return the latest note if exists, null otherwise
+     */
+    @Authorized(PrivilegeConstants.GET_MEDICATION_ADMINISTRATIONS)
+    MedicationAdministrationNote getLatestNote(@Nonnull Integer medicationAdministrationId);
 }

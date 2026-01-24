@@ -14,9 +14,47 @@ import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.openmrs.module.fhir2.api.FhirService;
 import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
+import org.openmrs.module.ipd.api.model.MedicationAdministrationAcknowledgement;
+import org.openmrs.module.ipd.api.model.MedicationAdministrationNote;
+
+import javax.annotation.Nonnull;
 
 public interface FhirMedicationAdministrationService extends FhirService<MedicationAdministration> {
-	
+
 	IBundleProvider searchForMedicationAdministration(
 	        MedicationAdministrationSearchParams medicationAdministrationSearchParams);
+
+	/**
+	 * Add an amendment note to a medication administration record.
+	 * Creates a new note that links to the previous note (if exists) using a linked list pattern.
+	 *
+	 * @param medicationAdministrationUuid the UUID of the medication administration
+	 * @param text the note text content
+	 * @param amendmentReason optional reason for the amendment (e.g., "Incorrect Dose")
+	 * @return the created note
+	 * @throws org.openmrs.api.APIException if the record is locked (acknowledged)
+	 */
+	MedicationAdministrationNote amendNote(@Nonnull String medicationAdministrationUuid,
+	                                       @Nonnull String text,
+	                                       String amendmentReason);
+
+	/**
+	 * Acknowledge (approve/verify) a medication administration record.
+	 * Once acknowledged, the record is locked and no further amendments are allowed.
+	 *
+	 * @param medicationAdministrationUuid the UUID of the medication administration
+	 * @param remarks optional remarks/comments from the acknowledger
+	 * @return the created acknowledgement
+	 * @throws org.openmrs.api.APIException if already acknowledged
+	 */
+	MedicationAdministrationAcknowledgement acknowledge(@Nonnull String medicationAdministrationUuid,
+	                                                     String remarks);
+
+	/**
+	 * Check if a medication administration is locked from amendments.
+	 *
+	 * @param medicationAdministrationUuid the UUID of the medication administration
+	 * @return true if acknowledged and locked, false otherwise
+	 */
+	boolean isLocked(@Nonnull String medicationAdministrationUuid);
 }
