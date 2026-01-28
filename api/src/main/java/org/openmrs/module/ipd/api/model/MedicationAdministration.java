@@ -157,6 +157,7 @@ public class MedicationAdministration extends BaseFormRecordableOpenmrsData {
 	@JoinColumn(name = "medication_administration_id")
 	private Set<MedicationAdministrationNote> notes;
 
+
 	public MedicationAdministration() {
 	}
 

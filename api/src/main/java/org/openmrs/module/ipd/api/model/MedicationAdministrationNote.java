@@ -55,21 +55,6 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 	@Column(name = "text", length=65535)
 	private String text;
 
-	/**
-	 * Reference to the previous version of this note (for amendment tracking).
-	 * Null if this is the first note (not an amendment).
-	 */
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "previous_note_id")
-	private MedicationAdministrationNote previousNote;
-
-	/**
-	 * Reason for amending the note (e.g., "Incorrect Dose", "Incorrect Time").
-	 * Null if this is the first note (not an amendment).
-	 */
-	@Column(name = "amendment_reason", length=65535)
-	private String amendmentReason;
-
 	public MedicationAdministrationNote() {
 	}
 
@@ -119,31 +104,6 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public MedicationAdministrationNote getPreviousNote() {
-		return previousNote;
-	}
-
-	public void setPreviousNote(MedicationAdministrationNote previousNote) {
-		this.previousNote = previousNote;
-	}
-
-	public String getAmendmentReason() {
-		return amendmentReason;
-	}
-
-	public void setAmendmentReason(String amendmentReason) {
-		this.amendmentReason = amendmentReason;
-	}
-
-	/**
-	 * Check if this note is an amendment (has a previous version).
-	 *
-	 * @return true if this is an amended note, false if it's the original note
-	 */
-	public boolean isAmendment() {
-		return previousNote != null;
 	}
 
 }
