@@ -243,4 +243,21 @@
         </delete>
     </changeSet>
 
+    <changeSet id="20260128-extend-note-amendment" author="bahmni">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="medication_administration_note" columnName="previous_note_id"/>
+            </not>
+        </preConditions>
+        <comment>Extend medication_administration_note for amendment tracking</comment>
+        <addColumn tableName="medication_administration_note">
+            <column name="previous_note_id" type="int">
+                <constraints foreignKeyName="fk_med_admin_note_previous"
+                             references="medication_administration_note(medication_administration_note_id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="medication_administration_note">
+            <column name="amendment_reason" type="text"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
