@@ -13,7 +13,14 @@
 	<name>Medication Administration API</name>
 	<description>Medication Administration API contains DB model and FHIR translation layers for medication administration</description>
 
-	<build>
+	
+    <licenses>
+        <license>
+            <name>Mozilla Public License Version 2.0</name>
+            <url>https://www.bahmni.org/license/mplv2hd</url>
+        </license>
+    </licenses>
+    <build>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>

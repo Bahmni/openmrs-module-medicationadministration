@@ -15,7 +15,14 @@
 	<name>Medication Administration omod</name>
 	<description>Medication Administration module contains all backend APIs for Medication Administration</description>
 
-	<properties>
+	
+    <licenses>
+        <license>
+            <name>Mozilla Public License Version 2.0</name>
+            <url>https://www.bahmni.org/license/mplv2hd</url>
+        </license>
+    </licenses>
+    <properties>
 		<MODULE_ID>medication-administration</MODULE_ID>
 		<MODULE_NAME>${project.name}</MODULE_NAME>
 		<MODULE_VERSION>${project.version}</MODULE_VERSION>
