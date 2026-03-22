@@ -11,7 +11,6 @@ package org.openmrs.module.ipd.api.model;
 
 import org.openmrs.*;
 
-import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -22,37 +21,16 @@ import java.util.Date;
  *     	</a>
  * @since 2.5.12
  */
-@Entity
-@Table(name = "medication_administration_note")
 public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "medication_administration_note_id")
 	private Integer medicationAdministrationNoteId;
 
-	/**
-	 * FHIR:author
-	 * Who made the statement
-	 */
-	@OneToOne(optional = true)
-	@JoinColumn(name = "author_id")
 	private Provider author;
 
-	/**
-	 * FHIR:time
-	 * Time when the statement was recorded
-	 */
-	@Column(name = "recorded_time")
 	private Date recordedTime;
 
-	/**
-	 * FHIR:text
-	 * The statement - a text note associated with the annotation.
-	 */
-	@Column(name = "text", length=65535)
 	private String text;
 
 	public MedicationAdministrationNote() {

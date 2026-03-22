@@ -17,5 +17,11 @@
 	</require_modules>
 
 	<activator>org.openmrs.module.fhir2.apiext.MedicationAdministrationActivator</activator>
+
+	<mappingFiles>
+		MedicationAdministration.hbm.xml
+		MedicationAdministrationPerformer.hbm.xml
+		MedicationAdministrationNote.hbm.xml
+	</mappingFiles>
 </module>
 

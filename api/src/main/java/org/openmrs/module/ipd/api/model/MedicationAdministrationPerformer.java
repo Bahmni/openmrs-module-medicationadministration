@@ -11,8 +11,6 @@ package org.openmrs.module.ipd.api.model;
 
 import org.openmrs.*;
 
-import javax.persistence.*;
-
 /**
  * The MedicationAdministration class records detailed information about the provision of a supply of a medication
  * with the intention that it is subsequently consumed by a patient (usually in response to a prescription).
@@ -22,34 +20,14 @@ import javax.persistence.*;
  *     	</a>
  * @since 2.5.12
  */
-@Entity
-@Table(name = "medication_administration_performer")
 public class MedicationAdministrationPerformer extends BaseFormRecordableOpenmrsData {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "medication_administration_performer_id")
 	private Integer medicationAdministrationPerformerId;
 
-	/**
-	 * FHIR:actor
-	 * Indicates who or what performed the medication administration and how they were involved.
-	 */
-	@OneToOne(optional = false)
-	@JoinColumn(name = "actor_id")
 	private Provider actor;
 
-	/**
-	 * FHIR:function
-	 * @see <a href="https://hl7.org/fhir/R4/valueset-med-admin-perform-function.html">
-	 *     		https://hl7.org/fhir/R4/valueset-med-admin-perform-function.html
-	 *     	</a>
-	 * i.e. performer, verifier, witness
-	 */
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "performer_function")
 	private Concept function;
 
 	public MedicationAdministrationPerformer() {

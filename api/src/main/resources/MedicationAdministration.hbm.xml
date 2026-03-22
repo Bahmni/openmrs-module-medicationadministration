@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.ipd.api.model">
+
+	<class name="MedicationAdministration" table="medication_administration">
+
+		<id name="medicationAdministrationId" type="int" column="medication_administration_id">
+			<generator class="identity" />
+		</id>
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" not-null="true" />
+
+		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
+		<many-to-one name="encounter" class="org.openmrs.Encounter" column="encounter_id" />
+		<many-to-one name="drug" class="org.openmrs.Drug" column="drug_id" />
+		<many-to-one name="drugOrder" class="org.openmrs.DrugOrder" column="drug_order_id" />
+
+		<property name="status" column="status" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.hl7.fhir.r4.model.MedicationAdministration$MedicationAdministrationStatus</param>
+				<param name="useNamed">true</param>
+			</type>
+		</property>
+
+		<many-to-one name="statusReason" class="org.openmrs.Concept" column="status_reason" />
+
+		<property name="administeredDateTime" type="java.util.Date" column="administered_date_time" />
+		<property name="dosingInstructions" type="java.lang.String" column="dosing_instructions" length="65535" />
+		<property name="dose" type="java.lang.Double" column="dose" />
+
+		<many-to-one name="doseUnits" class="org.openmrs.Concept" column="dose_units" />
+		<many-to-one name="route" class="org.openmrs.Concept" column="route" />
+		<many-to-one name="site" class="org.openmrs.Concept" column="site" />
+
+		<set name="performers" cascade="all">
+			<key column="medication_administration_id" />
+			<one-to-many class="MedicationAdministrationPerformer" />
+		</set>
+
+		<set name="notes" cascade="all">
+			<key column="medication_administration_id" />
+			<one-to-many class="MedicationAdministrationNote" />
+		</set>
+
+		<!-- BaseFormRecordableOpenmrsData fields -->
+		<property name="formNamespaceAndPath" type="java.lang.String" column="form_namespace_and_path" length="255" />
+
+		<!-- BaseChangeableOpenmrsData / BaseOpenmrsData fields -->
+		<many-to-one name="creator" class="org.openmrs.User" column="creator" not-null="true" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" />
+		<property name="voided" type="java.lang.Boolean" column="voided" not-null="true" />
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		<property name="dateVoided" type="java.util.Date" column="date_voided" />
+		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
+
+	</class>
+
+</hibernate-mapping>
