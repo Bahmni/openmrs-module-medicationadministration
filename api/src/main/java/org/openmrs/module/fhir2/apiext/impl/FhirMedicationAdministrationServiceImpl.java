@@ -22,6 +22,7 @@ import org.openmrs.module.fhir2.api.search.SearchQueryInclude;
 import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,9 +37,11 @@ public class FhirMedicationAdministrationServiceImpl extends BaseFhirService<Med
 	private FhirMedicationAdministrationDao dao;
 
 	@Autowired
+	@Lazy
 	private SearchQueryInclude<MedicationAdministration> searchQueryInclude;
 
 	@Autowired
+	@Lazy
 	private SearchQuery<org.openmrs.module.ipd.api.model.MedicationAdministration,MedicationAdministration,FhirMedicationAdministrationDao<org.openmrs.module.ipd.api.model.MedicationAdministration>, MedicationAdministrationTranslator<org.openmrs.module.ipd.api.model.MedicationAdministration>, SearchQueryInclude<MedicationAdministration>> searchQuery;
 
 	@Override
