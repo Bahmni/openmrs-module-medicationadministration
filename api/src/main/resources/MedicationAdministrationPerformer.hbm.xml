@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.ipd.api.model">
+
+	<class name="MedicationAdministrationPerformer" table="medication_administration_performer">
+
+		<id name="medicationAdministrationPerformerId" type="int" column="medication_administration_performer_id">
+			<generator class="identity" />
+		</id>
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" not-null="true" />
+
+		<many-to-one name="actor" class="org.openmrs.Provider" column="actor_id" not-null="true" />
+		<many-to-one name="function" class="org.openmrs.Concept" column="performer_function" />
+
+		<!-- BaseFormRecordableOpenmrsData fields -->
+		<property name="formNamespaceAndPath" type="java.lang.String" column="form_namespace_and_path" length="255" />
+
+		<!-- BaseOpenmrsData fields -->
+		<many-to-one name="creator" class="org.openmrs.User" column="creator" not-null="true" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" />
+		<property name="voided" type="java.lang.Boolean" column="voided" not-null="true" />
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		<property name="dateVoided" type="java.util.Date" column="date_voided" />
+		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
+
+	</class>
+
+</hibernate-mapping>
