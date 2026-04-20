@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.ipd.api.model;
 
+import javax.persistence.*;
 import org.openmrs.*;
 
 import java.util.Date;
