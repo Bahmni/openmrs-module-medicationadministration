@@ -1,9 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-package org.openmrs.util;
+package org.openmrs.module.medicationadministration.util;
 
 import org.openmrs.annotation.AddOnStartup;
 import org.openmrs.annotation.HasAddOnStartupPrivileges;
