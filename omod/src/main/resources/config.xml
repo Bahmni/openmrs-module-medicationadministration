@@ -16,6 +16,19 @@
 		<require_module>org.openmrs.module.fhir2</require_module>
 	</require_modules>
 
+	<privilege>
+		<name>Get Medication Administrations</name>
+		<description>Able to get Medication Administrations</description>
+	</privilege>
+	<privilege>
+		<name>Edit Medication Administration</name>
+		<description>Able to edit Medication Administration</description>
+	</privilege>
+	<privilege>
+		<name>Delete Medication Administration</name>
+		<description>Able to delete Medication Administration</description>
+	</privilege>
+
 	<activator>org.openmrs.module.fhir2.apiext.MedicationAdministrationActivator</activator>
 </module>
 
