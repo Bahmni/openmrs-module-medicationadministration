@@ -228,4 +228,19 @@
         </update>
     </changeSet>
 
+    <changeSet id="20260615BAH4080_remove_singular_get_medication_administration_privilege" author="Lingeswaran">
+        <preConditions onFail="MARK_RAN" onFailMessage="Privilege 'Get Medication Administration' does not exist, skipping removal">
+            <sqlCheck expectedResult="1">
+                SELECT IF(COUNT(*) > 0, 1, 0) FROM privilege WHERE privilege = 'Get Medication Administration'
+            </sqlCheck>
+        </preConditions>
+        <comment>Remove stale singular "Get Medication Administration" privilege; "Get Medication Administrations" (plural) is the canonical owner declared in config.xml</comment>
+        <delete tableName="role_privilege">
+            <where>privilege = 'Get Medication Administration'</where>
+        </delete>
+        <delete tableName="privilege">
+            <where>privilege = 'Get Medication Administration'</where>
+        </delete>
+    </changeSet>
+
 </databaseChangeLog>
