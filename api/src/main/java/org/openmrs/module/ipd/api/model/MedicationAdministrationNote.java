@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.ipd.api.model;
 
-import javax.persistence.*;
 import org.openmrs.*;
 
 import java.util.Date;
@@ -34,19 +33,8 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	private String text;
 
-	/**
-	 * Reference to the previous version of this note (for amendment tracking).
-	 * Null if this is the first note (not an amendment).
-	 */
-	@OneToOne(optional = true)
-	@JoinColumn(name = "previous_note_id")
 	private MedicationAdministrationNote previousNote;
 
-	/**
-	 * Reason for amending the note.
-	 * Null if this is the first note (not an amendment).
-	 */
-	@Column(name = "amendment_reason", length=65535)
 	private String amendmentReason;
 
 	public MedicationAdministrationNote() {
