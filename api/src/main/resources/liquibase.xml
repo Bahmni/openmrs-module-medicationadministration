@@ -272,4 +272,22 @@
                                  constraintName="med_admin_note_amendment_reason_fk"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
     </changeSet>
+
+    <changeSet id="202607150001-amendment-reason-concept-existing-env" author="Soorya">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <columnExists tableName="medication_administration_note" columnName="status_reason_concept_id"/>
+                </not>
+                <columnExists tableName="medication_administration_note" columnName="amendment_reason"/>
+            </and>
+        </preConditions>
+        <comment>Add column for migrating amendment_reason from text to concept for existing environments</comment>
+        <addColumn tableName="medication_administration_note">
+            <column name="status_reason_concept_id" type="int"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="status_reason_concept_id"
+                                 constraintName="med_admin_note_amendment_reason_fk"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+    </changeSet>
 </databaseChangeLog>

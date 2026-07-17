@@ -35,7 +35,7 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	private MedicationAdministrationNote previousNote;
 
-	private Integer amendmentReasonConceptId;
+	private Concept statusReason;
 
 	public MedicationAdministrationNote() {
 	}
@@ -96,12 +96,12 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 		this.previousNote = previousNote;
 	}
 
-	public Integer getAmendmentReasonConceptId() {
-		return amendmentReasonConceptId;
+	public Concept getStatusReason() {
+		return statusReason;
 	}
 
-	public void setAmendmentReasonConceptId(Integer amendmentReasonConceptId) {
-		this.amendmentReasonConceptId = amendmentReasonConceptId;
+	public void setStatusReason(Concept statusReason) {
+		this.statusReason = statusReason;
 	}
 
 	/**
