@@ -241,21 +241,15 @@
                              references="medication_administration_note(medication_administration_note_id)"/>
             </column>
         </addColumn>
-        <addColumn tableName="medication_administration_note">
-            <column name="amendment_reason" type="text"/>
-        </addColumn>
     </changeSet>
 
     <changeSet id="202607150001-amendment-reason-concept-existing-env" author="Soorya">
         <preConditions onFail="MARK_RAN">
-            <and>
-                <not>
-                    <columnExists tableName="medication_administration_note" columnName="amendment_reason_concept_id"/>
-                </not>
-                <columnExists tableName="medication_administration_note" columnName="amendment_reason"/>
-            </and>
+            <not>
+                <columnExists tableName="medication_administration_note" columnName="amendment_reason_concept_id"/>
+            </not>
         </preConditions>
-        <comment>Add column for migrating amendment_reason from text to concept for existing environments</comment>
+        <comment>Add column for amendment reason concept id</comment>
         <addColumn tableName="medication_administration_note">
             <column name="amendment_reason_concept_id" type="int"/>
         </addColumn>
