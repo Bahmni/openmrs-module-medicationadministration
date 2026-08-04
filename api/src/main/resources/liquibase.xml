@@ -251,43 +251,26 @@
         </preConditions>
         <comment>Extend medication_administration_note for amendment tracking</comment>
         <addColumn tableName="medication_administration_note">
-            <column name="previous_note_id" type="int">
-                <constraints foreignKeyName="fk_med_admin_note_previous"
-                             references="medication_administration_note(medication_administration_note_id)"/>
-            </column>
+            <column name="previous_note_id" type="int"/>
         </addColumn>
+        <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="previous_note_id"
+                                 constraintName="fk_med_admin_note_previous"
+                                 referencedTableName="medication_administration_note" referencedColumnNames="medication_administration_note_id"
+                                 onDelete="SET NULL"/>
     </changeSet>
 
-    <changeSet id="202607150001-amendment-reason-concept-existing-env" author="Soorya">
+    <changeSet id="202607150001-status-reason-concept-existing-env" author="Soorya">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="medication_administration_note" columnName="amendment_reason_concept_id"/>
+                <columnExists tableName="medication_administration_note" columnName="status_reason_concept_id"/>
             </not>
         </preConditions>
-        <comment>Add column for amendment reason concept id</comment>
-        <addColumn tableName="medication_administration_note">
-            <column name="amendment_reason_concept_id" type="int"/>
-        </addColumn>
-        <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="amendment_reason_concept_id"
-                                 constraintName="med_admin_note_amendment_reason_fk"
-                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
-    </changeSet>
-
-    <changeSet id="202607150001-amendment-reason-concept-existing-env" author="Soorya">
-        <preConditions onFail="MARK_RAN">
-            <and>
-                <not>
-                    <columnExists tableName="medication_administration_note" columnName="status_reason_concept_id"/>
-                </not>
-                <columnExists tableName="medication_administration_note" columnName="amendment_reason"/>
-            </and>
-        </preConditions>
-        <comment>Add column for migrating amendment_reason from text to concept for existing environments</comment>
+        <comment>Add column for amendment_reason concept dropdown</comment>
         <addColumn tableName="medication_administration_note">
             <column name="status_reason_concept_id" type="int"/>
         </addColumn>
         <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="status_reason_concept_id"
-                                 constraintName="med_admin_note_amendment_reason_fk"
+                                 constraintName="med_admin_note_status_reason_fk"
                                  referencedTableName="concept" referencedColumnNames="concept_id"/>
     </changeSet>
 </databaseChangeLog>

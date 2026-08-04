@@ -17,7 +17,7 @@
 		<property name="recordedTime" type="java.util.Date" column="recorded_time" />
 		<property name="text" type="java.lang.String" column="text" length="65535" />
 		<many-to-one name="previousNote" class="MedicationAdministrationNote" column="previous_note_id" />
-		<property name="amendmentReasonConceptId" type="java.lang.Integer" column="amendment_reason_concept_id" />
+		<many-to-one name="statusReason" class="org.openmrs.Concept" column="status_reason_concept_id" />
 
 		<!-- BaseOpenmrsData fields -->
 		<many-to-one name="creator" class="org.openmrs.User" column="creator" not-null="true" />
