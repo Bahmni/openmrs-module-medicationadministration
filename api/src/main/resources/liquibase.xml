@@ -243,4 +243,34 @@
         </delete>
     </changeSet>
 
+    <changeSet id="20260128-extend-note-amendment" author="bahmni">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="medication_administration_note" columnName="previous_note_id"/>
+            </not>
+        </preConditions>
+        <comment>Extend medication_administration_note for amendment tracking</comment>
+        <addColumn tableName="medication_administration_note">
+            <column name="previous_note_id" type="int"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="previous_note_id"
+                                 constraintName="fk_med_admin_note_previous"
+                                 referencedTableName="medication_administration_note" referencedColumnNames="medication_administration_note_id"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="202607150001-status-reason-concept-existing-env" author="Soorya">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="medication_administration_note" columnName="status_reason_concept_id"/>
+            </not>
+        </preConditions>
+        <comment>Add column for amendment_reason concept dropdown</comment>
+        <addColumn tableName="medication_administration_note">
+            <column name="status_reason_concept_id" type="int"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="medication_administration_note" baseColumnNames="status_reason_concept_id"
+                                 constraintName="med_admin_note_status_reason_fk"
+                                 referencedTableName="concept" referencedColumnNames="concept_id"/>
+    </changeSet>
 </databaseChangeLog>

@@ -33,6 +33,10 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	private String text;
 
+	private MedicationAdministrationNote previousNote;
+
+	private Concept statusReason;
+
 	public MedicationAdministrationNote() {
 	}
 
@@ -82,6 +86,31 @@ public class MedicationAdministrationNote extends BaseOpenmrsData {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public MedicationAdministrationNote getPreviousNote() {
+		return previousNote;
+	}
+
+	public void setPreviousNote(MedicationAdministrationNote previousNote) {
+		this.previousNote = previousNote;
+	}
+
+	public Concept getStatusReason() {
+		return statusReason;
+	}
+
+	public void setStatusReason(Concept statusReason) {
+		this.statusReason = statusReason;
+	}
+
+	/**
+	 * Check if this note is an amendment (has a previous version).
+	 *
+	 * @return true if this is an amended note, false if it's the original note
+	 */
+	public boolean isAmendment() {
+		return previousNote != null;
 	}
 
 }
