@@ -11,7 +11,7 @@ This omod is being used in the [openmrs-module-ipd](https://github.com/Bahmni/op
 ```mvn clean package```
 
 ### Prerequisite
-    JDK 1.8
+    JDK 17
 
 ## Deploy
 
