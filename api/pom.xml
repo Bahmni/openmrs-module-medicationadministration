@@ -106,7 +106,7 @@
 			<artifactId>openmrs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-<dependency>
+		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
 			<scope>provided</scope>
