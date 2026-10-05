@@ -61,7 +61,7 @@ public class MedicationAdministrationHibernateIntegrationTest {
 		hibernateProps.setProperty("hibernate.show_sql", "false");
 		hibernateProps.setProperty("hibernate.cache.use_second_level_cache", "false");
 		hibernateProps.setProperty("hibernate.cache.use_query_cache", "false");
-		hibernateProps.setProperty("hibernate.search.autoregister_listeners", "false");
+		hibernateProps.setProperty("hibernate.search.enabled", "false");
 		hibernateProps.setProperty("hibernate.id.new_generator_mappings", "false");
 		factoryBean.setHibernateProperties(hibernateProps);
 
