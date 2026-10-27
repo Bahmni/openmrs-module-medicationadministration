@@ -12,8 +12,16 @@ package org.openmrs.module.fhir2.apiext.translators.impl;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+import org.openmrs.Concept;
 import org.openmrs.Provider;
+import org.openmrs.api.ConceptService;
+import org.openmrs.module.fhir2.FhirConstants;
+import org.openmrs.module.fhir2.api.translators.ConceptTranslator;
 import org.openmrs.module.fhir2.api.translators.PractitionerReferenceTranslator;
 import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationNoteDao;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
@@ -37,6 +45,12 @@ public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdm
     @Autowired
     private FhirMedicationAdministrationNoteDao fhirMedicationAdministrationNoteDao;
 
+    @Autowired
+    private ConceptTranslator conceptTranslator;
+
+    @Autowired
+    private ConceptService conceptService;
+
 
     @Override
     public org.hl7.fhir.r4.model.Annotation toFhirResource(@Nonnull MedicationAdministrationNote openmrsObject) {
@@ -51,6 +65,14 @@ public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdm
         }
         if (openmrsObject.getRecordedTime() != null) {
             fhirObject.setTime(openmrsObject.getRecordedTime());
+        }
+        if (openmrsObject.getPreviousNote() != null) {
+            fhirObject.addExtension(new Extension(FhirConstants.NOTE_PREVIOUS_NOTE_ID_EXTENSION_URL,
+                    new StringType(openmrsObject.getPreviousNote().getUuid())));
+        }
+        if (openmrsObject.getStatusReason() != null) {
+            fhirObject.addExtension(new Extension(FhirConstants.NOTE_AMENDMENT_REASON_EXTENSION_URL,
+                    conceptTranslator.toFhirResource(openmrsObject.getStatusReason())));
         }
         return fhirObject;
     }
@@ -79,6 +101,35 @@ public class MedicationAdministrationNoteTranslatorImpl implements MedicationAdm
         if (fhirObject.hasTime()) {
             openmrsObject.setRecordedTime(fhirObject.getTime());
         }
+        Extension previousNoteExtension = fhirObject.getExtensionByUrl(FhirConstants.NOTE_PREVIOUS_NOTE_ID_EXTENSION_URL);
+        if (previousNoteExtension != null && previousNoteExtension.getValue() instanceof StringType) {
+            String previousNoteUuid = ((StringType) previousNoteExtension.getValue()).getValue();
+            if (StringUtils.isNotBlank(previousNoteUuid)) {
+                MedicationAdministrationNote previousNote = fhirMedicationAdministrationNoteDao.get(previousNoteUuid);
+                if (previousNote != null) {
+                    openmrsObject.setPreviousNote(previousNote);
+                }
+            }
+        }
+        Extension reasonExtension = fhirObject.getExtensionByUrl(FhirConstants.NOTE_AMENDMENT_REASON_EXTENSION_URL);
+        if (reasonExtension != null && reasonExtension.getValue() instanceof CodeableConcept) {
+            Concept reason = resolveConcept((CodeableConcept) reasonExtension.getValue());
+            if (reason != null) {
+                openmrsObject.setStatusReason(reason);
+            }
+        }
         return openmrsObject;
+    }
+
+    private Concept resolveConcept(CodeableConcept codeableConcept) {
+        for (org.hl7.fhir.r4.model.Coding coding : codeableConcept.getCoding()) {
+            if (StringUtils.isNotBlank(coding.getCode()) && !coding.hasSystem()) {
+                Concept concept = conceptService.getConceptByUuid(coding.getCode());
+                if (concept != null) {
+                    return concept;
+                }
+            }
+        }
+        return conceptTranslator.toOpenmrsType(codeableConcept);
     }
 }
