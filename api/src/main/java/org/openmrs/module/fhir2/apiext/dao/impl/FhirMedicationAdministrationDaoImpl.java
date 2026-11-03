@@ -9,9 +9,10 @@
 */
 package org.openmrs.module.fhir2.apiext.dao.impl;
 
-import static org.hibernate.criterion.Restrictions.*;
-
 import javax.annotation.Nonnull;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,16 +22,15 @@ import ca.uhn.fhir.rest.param.ReferenceAndListParam;
 import ca.uhn.fhir.rest.param.TokenAndListParam;
 import lombok.AccessLevel;
 import lombok.Setter;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationStatus;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.module.ipd.api.model.MedicationAdministration;
 import org.openmrs.module.fhir2.FhirConstants;
 import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
-import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.fhir2.api.dao.internals.OpenmrsFhirCriteriaContext;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
+import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.ipd.api.model.MedicationAdministration;
 import org.openmrs.module.medicationadministration.util.PrivilegeConstants;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,47 +81,59 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
     }
 
     @Override
-    protected void setupSearchParams(Criteria criteria, SearchParameterMap theParams) {
+    protected <U> void setupSearchParams(@Nonnull OpenmrsFhirCriteriaContext<MedicationAdministration, U> criteriaContext,
+            @Nonnull SearchParameterMap theParams) {
         theParams.getParameters().forEach(entry -> {
             switch (entry.getKey()) {
                 case FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER:
                     entry.getValue().forEach(
-                        e -> handleEncounterReference(criteria, (ReferenceAndListParam) e.getParam(), "e"));
+                        e -> getSearchQueryHelper().handleEncounterReference(criteriaContext,
+                            (ReferenceAndListParam) e.getParam(), "e"));
                     break;
                 case FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER:
                     entry.getValue().forEach(
-                        p -> handlePatientReference(criteria, (ReferenceAndListParam) p.getParam(), "patient"));
+                        p -> getSearchQueryHelper().handlePatientReference(criteriaContext,
+                            (ReferenceAndListParam) p.getParam(), "patient"));
                     break;
                 case FhirConstants.MEDICATION_REQUEST_REFERENCE_SEARCH_HANDLER:
-                    entry.getValue().forEach(r -> handleMedicationRequestReference("do",
-                        (ReferenceAndListParam) r.getParam()).ifPresent(c -> criteria.createAlias("drugOrder", "do").add(c)));
+                    From<?, ?> drugOrderJoin = criteriaContext.addJoin("drugOrder", "do");
+                    entry.getValue().forEach(r -> getSearchQueryHelper()
+                            .handleMedicationRequestReference(criteriaContext, drugOrderJoin,
+                                (ReferenceAndListParam) r.getParam())
+                            .ifPresent(criteriaContext::addPredicate));
                     break;
                 case FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER:
-                    entry.getValue().forEach(d -> handleMedicationReference("d", (ReferenceAndListParam) d.getParam())
-                        .ifPresent(c -> criteria.createAlias("drug", "d").add(c)));
+                    From<?, ?> drugJoin = criteriaContext.addJoin("drug", "d");
+                    entry.getValue().forEach(d -> getSearchQueryHelper()
+                            .handleMedicationReference(criteriaContext, drugJoin, (ReferenceAndListParam) d.getParam())
+                            .ifPresent(criteriaContext::addPredicate));
                     break;
                 case FhirConstants.STATUS_SEARCH_HANDLER:
-                    entry.getValue()
-                        .forEach(param -> handleStatus((TokenAndListParam) param.getParam()).ifPresent(criteria::add));
+                    entry.getValue().forEach(param -> handleStatus(criteriaContext, (TokenAndListParam) param.getParam())
+                            .ifPresent(criteriaContext::addPredicate));
                     break;
                 case FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER:
                     entry.getValue().forEach(
-                        p -> handlePerformerReference(criteria, (ReferenceAndListParam) p.getParam()));
+                        p -> handlePerformerReference(criteriaContext, (ReferenceAndListParam) p.getParam()));
                     break;
                 case FhirConstants.COMMON_SEARCH_HANDLER:
-                    handleCommonSearchParameters(entry.getValue()).ifPresent(criteria::add);
+                    handleCommonSearchParameters(criteriaContext, entry.getValue())
+                            .ifPresent(criteriaContext::addPredicate);
                     break;
             }
         });
     }
 
-    private Optional<Criterion> handleStatus(TokenAndListParam tokenAndListParam) {
-        return handleAndListParam(tokenAndListParam, token -> {
+    private <U> Optional<Predicate> handleStatus(
+            OpenmrsFhirCriteriaContext<MedicationAdministration, U> criteriaContext,
+            TokenAndListParam tokenAndListParam) {
+        return handleAndListParam(criteriaContext.getCriteriaBuilder(), tokenAndListParam, token -> {
             if (token.getValue() == null) {
                 return Optional.empty();
             }
             try {
-                return Optional.of(eq("status", MedicationAdministrationStatus.fromCode(token.getValue().toLowerCase())));
+                return Optional.of(criteriaContext.getCriteriaBuilder().equal(criteriaContext.getRoot().get("status"),
+                    MedicationAdministrationStatus.fromCode(token.getValue().toLowerCase())));
             }
             catch (FHIRException e) {
                 return Optional.empty();
@@ -129,16 +141,16 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
         });
     }
 
-    private void handlePerformerReference(Criteria criteria, ReferenceAndListParam reference) {
+    private <U> void handlePerformerReference(
+            OpenmrsFhirCriteriaContext<MedicationAdministration, U> criteriaContext,
+            ReferenceAndListParam reference) {
         if (reference == null) {
             return;
         }
-        if (lacksAlias(criteria, "pr")) {
-            criteria.createAlias("performers", "pr");
-        }
-        if (lacksAlias(criteria, "pa")) {
-            criteria.createAlias("pr.actor", "pa");
-        }
-        handleAndListParam(reference, param -> Optional.of(eq("pa.uuid", param.getIdPart()))).ifPresent(criteria::add);
+        Join<?, ?> performerJoin = criteriaContext.addJoin("performers", "pr");
+        Join<?, ?> actorJoin = criteriaContext.addJoin(performerJoin, "actor", "pa");
+        handleAndListParam(criteriaContext.getCriteriaBuilder(), reference,
+            param -> Optional.of(criteriaContext.getCriteriaBuilder().equal(actorJoin.get("uuid"), param.getIdPart())))
+                .ifPresent(criteriaContext::addPredicate);
     }
 }
