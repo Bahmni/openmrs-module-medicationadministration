@@ -30,6 +30,7 @@ import org.openmrs.module.fhir2.api.dao.impl.BaseFhirDao;
 import org.openmrs.module.fhir2.api.dao.internals.OpenmrsFhirCriteriaContext;
 import org.openmrs.module.fhir2.api.search.param.SearchParameterMap;
 import org.openmrs.module.fhir2.apiext.dao.FhirMedicationAdministrationDao;
+import org.openmrs.module.fhir2.apiext.search.param.MedicationAdministrationSearchParams;
 import org.openmrs.module.ipd.api.model.MedicationAdministration;
 import org.openmrs.module.medicationadministration.util.PrivilegeConstants;
 import org.springframework.stereotype.Component;
@@ -89,6 +90,16 @@ public class FhirMedicationAdministrationDaoImpl extends BaseFhirDao<MedicationA
                     entry.getValue().forEach(
                         e -> getSearchQueryHelper().handleEncounterReference(criteriaContext,
                             (ReferenceAndListParam) e.getParam(), "e"));
+                    break;
+                case MedicationAdministrationSearchParams.VISIT_REFERENCE_SEARCH_HANDLER:
+                    // Custom visit parameter: MedicationAdministration has no visit field, so join
+                    // through its encounter. Keeps the standard 'context' (Encounter) param intact.
+                    From<?, ?> encounterJoin = criteriaContext.addJoin("encounter", "maEncounter");
+                    From<?, ?> visitJoin = criteriaContext.addJoin(encounterJoin, "visit", "maVisit");
+                    entry.getValue().forEach(v -> handleAndListParam(criteriaContext.getCriteriaBuilder(),
+                        (ReferenceAndListParam) v.getParam(),
+                        param -> Optional.of(criteriaContext.getCriteriaBuilder().equal(visitJoin.get("uuid"),
+                            param.getIdPart()))).ifPresent(criteriaContext::addPredicate));
                     break;
                 case FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER:
                     entry.getValue().forEach(

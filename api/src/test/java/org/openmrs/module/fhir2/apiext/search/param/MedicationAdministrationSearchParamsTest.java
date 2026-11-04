@@ -29,17 +29,20 @@ public class MedicationAdministrationSearchParamsTest {
 	public void toSearchParameterMap_shouldMapEachHandlerToItsOwnParam() {
 		ReferenceAndListParam patient = new ReferenceAndListParam();
 		ReferenceAndListParam encounter = new ReferenceAndListParam();
+		ReferenceAndListParam visit = new ReferenceAndListParam();
 		ReferenceAndListParam request = new ReferenceAndListParam();
 		ReferenceAndListParam medication = new ReferenceAndListParam();
 		ReferenceAndListParam performer = new ReferenceAndListParam();
 		TokenAndListParam status = new TokenAndListParam();
 
 		SearchParameterMap map = MedicationAdministrationSearchParams.builder().patientReference(patient)
-		        .encounterReference(encounter).medicationRequestReference(request).medicationReference(medication)
-		        .performerReference(performer).status(status).build().toSearchParameterMap();
+		        .encounterReference(encounter).visitReference(visit).medicationRequestReference(request)
+		        .medicationReference(medication).performerReference(performer).status(status).build()
+		        .toSearchParameterMap();
 
 		assertSame(patient, paramOf(map, FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER));
 		assertSame(encounter, paramOf(map, FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER));
+		assertSame(visit, paramOf(map, MedicationAdministrationSearchParams.VISIT_REFERENCE_SEARCH_HANDLER));
 		assertSame(request, paramOf(map, FhirConstants.MEDICATION_REQUEST_REFERENCE_SEARCH_HANDLER));
 		assertSame(medication, paramOf(map, FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER));
 		assertSame(performer, paramOf(map, FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER));
