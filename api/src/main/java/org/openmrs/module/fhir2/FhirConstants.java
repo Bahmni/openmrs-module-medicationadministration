@@ -30,4 +30,8 @@ public class FhirConstants {
 
 	public static final String MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER = "medicationAdministration.performer.search.handler";
 
+	public static final String NOTE_PREVIOUS_NOTE_ID_EXTENSION_URL = "http://fhir.openmrs.org/ext/ipd/note/previous-note-id";
+
+	public static final String NOTE_AMENDMENT_REASON_EXTENSION_URL = "http://fhir.openmrs.org/ext/ipd/note/amendment-reason";
+
 }

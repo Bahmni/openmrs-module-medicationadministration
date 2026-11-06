@@ -18,11 +18,12 @@ import javax.annotation.Nonnull;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.SimpleQuantity;
 import org.openmrs.Encounter;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.fhir2.api.translators.*;
+import org.openmrs.module.fhir2.api.translators.impl.MedicationQuantityCodingTranslatorImpl;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationNoteTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationPerformerTranslator;
 import org.openmrs.module.fhir2.apiext.translators.MedicationAdministrationTranslator;
@@ -61,6 +62,9 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 	@Autowired
 	private ConceptTranslator conceptTranslator;
 
+	@Autowired
+	private MedicationQuantityCodingTranslatorImpl quantityCodingTranslator;
+
 
 
 	@Override
@@ -95,13 +99,25 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 
 		if (openmrsObject.getDrug() != null) {
 			fhirObject.setMedication(medicationReferenceTranslator.toFhirResource(openmrsObject.getDrug()));
+		} else if (openmrsObject.getDrugOrder() != null && openmrsObject.getDrugOrder().getDrug() != null) {
+			// FHIR requires medication[x]. Scheduled administrations do not store a drug on the
+			// administration itself; the prescribed drug lives on the order, so derive it from there.
+			fhirObject.setMedication(medicationReferenceTranslator.toFhirResource(openmrsObject.getDrugOrder().getDrug()));
+		} else if (openmrsObject.getDrugOrder() != null && openmrsObject.getDrugOrder().getConcept() != null) {
+			// Non-coded/free-text orders have no Drug; fall back to the order concept.
+			fhirObject.setMedication(conceptTranslator.toFhirResource(openmrsObject.getDrugOrder().getConcept()));
 		}
 
 		org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent dosage = new org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent();
 		if (openmrsObject.getDose() != null && openmrsObject.getDoseUnits() != null) {
 			SimpleQuantity dose = new SimpleQuantity();
 			dose.setValue(openmrsObject.getDose());
-			dose.setUnit(openmrsObject.getDoseUnits().getId().toString());
+			Coding doseUnitsCoding = quantityCodingTranslator.toFhirResource(openmrsObject.getDoseUnits());
+			if (doseUnitsCoding != null) {
+				dose.setSystem(doseUnitsCoding.getSystem());
+				dose.setCode(doseUnitsCoding.getCode());
+				dose.setUnit(openmrsObject.getDoseUnits().getDisplayString());
+			}
 			dosage.setDose(dose);
 		}
 		if (openmrsObject.getRoute() != null) {
@@ -166,20 +182,31 @@ public class MedicationAdministrationTranslatorImpl implements MedicationAdminis
 					performers.add((MedicationAdministrationPerformer) obj);
 				}
 			}
-			openmrsObject.setPerformers(performers);
+			// The performers set uses cascade="all, delete-orphan", so the persistent collection must
+			// be mutated in place; replacing the collection instance makes Hibernate throw at flush.
+			if (openmrsObject.getPerformers() == null) {
+				openmrsObject.setPerformers(performers);
+			} else {
+				openmrsObject.getPerformers().clear();
+				openmrsObject.getPerformers().addAll(performers);
+			}
 		}
 
 		if (fhirObject.hasRequest()) {
 			openmrsObject.setDrugOrder(medicationRequestReferenceTranslator.toOpenmrsType(fhirObject.getRequest()));
 		}
-		if (fhirObject.hasMedication()) {
+		// Only an adhoc administration (no MedicationRequest) stores its own drug. For a scheduled
+		// administration medication[x] is derived from the order, so it must not be persisted back
+		// onto the administration; medication[x] may also be a CodeableConcept, which cannot be
+		// resolved to an OpenMRS Drug.
+		if (fhirObject.hasMedicationReference() && !fhirObject.hasRequest()) {
 			openmrsObject.setDrug(medicationReferenceTranslator.toOpenmrsType(fhirObject.getMedicationReference()));
 		}
 		if (fhirObject.hasDosage()) {
 			org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent dosage = fhirObject.getDosage();
 			if (dosage.hasDose()) {
 				openmrsObject.setDose(dosage.getDose().getValue().doubleValue());
-				openmrsObject.setDoseUnits(Context.getConceptService().getConcept(dosage.getDose().getUnit()));
+				openmrsObject.setDoseUnits(quantityCodingTranslator.toOpenmrsType(dosage.getDose()));
 			}
 			if (dosage.hasRoute()) {
 				openmrsObject.setRoute(conceptTranslator.toOpenmrsType(dosage.getRoute()));
