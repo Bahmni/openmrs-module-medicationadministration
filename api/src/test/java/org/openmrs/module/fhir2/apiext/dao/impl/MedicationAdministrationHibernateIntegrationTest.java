@@ -77,6 +77,71 @@ public class MedicationAdministrationHibernateIntegrationTest {
 	}
 
 	@Test
+	public void shouldDeleteOrphanedPerformersWhenThePerformerSetIsReplaced() {
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			User creator = session.load(User.class, 1);
+			Provider provider = session.load(Provider.class, 1);
+
+			MedicationAdministrationPerformer original = new MedicationAdministrationPerformer();
+			original.setActor(provider);
+			original.setCreator(creator);
+			original.setDateCreated(new Date());
+			original.setVoided(false);
+
+			MedicationAdministration medAdmin = new MedicationAdministration();
+			medAdmin.setStatus(
+			    org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationStatus.COMPLETED);
+			medAdmin.setAdministeredDateTime(new Date());
+			medAdmin.setPerformers(new HashSet<>(Collections.singleton(original)));
+			medAdmin.setNotes(new HashSet<>());
+			medAdmin.setCreator(creator);
+			medAdmin.setDateCreated(new Date());
+			medAdmin.setVoided(false);
+
+			Integer savedId = (Integer) session.save(medAdmin);
+			session.flush();
+			Integer originalPerformerId = original.getMedicationAdministrationPerformerId();
+			assertNotNull(originalPerformerId);
+
+			// Simulate a FHIR PUT: replace the whole performer set with a brand-new performer. The
+			// persistent collection must be mutated in place (Hibernate forbids replacing it).
+			MedicationAdministrationPerformer replacement = new MedicationAdministrationPerformer();
+			replacement.setActor(provider);
+			replacement.setCreator(creator);
+			replacement.setDateCreated(new Date());
+			replacement.setVoided(false);
+			medAdmin.getPerformers().clear();
+			medAdmin.getPerformers().add(replacement);
+
+			session.flush();
+			session.clear();
+
+			MedicationAdministration retrieved = session.get(MedicationAdministration.class, savedId);
+			assertEquals("The replaced performer set must contain exactly one row",
+			    1, retrieved.getPerformers().size());
+			Integer reloadedPerformerId = retrieved.getPerformers().iterator().next()
+			        .getMedicationAdministrationPerformerId();
+			assertNotNull(reloadedPerformerId);
+			Number orphanCount = (Number) session
+			        .createSQLQuery("select count(*) from medication_administration_performer where "
+			                + "medication_administration_performer_id = " + originalPerformerId)
+			        .uniqueResult();
+			assertEquals("The orphaned performer row must have been deleted", 0, orphanCount.intValue());
+
+			tx.commit();
+		}
+		catch (Exception e) {
+			tx.rollback();
+			throw e;
+		}
+		finally {
+			session.close();
+		}
+	}
+
+	@Test
 	public void shouldPersistAndReloadMedicationAdministrationWithPerformersAndNotes() {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();

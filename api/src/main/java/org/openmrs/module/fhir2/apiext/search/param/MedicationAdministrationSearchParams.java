@@ -29,9 +29,17 @@ import java.util.HashSet;
 @EqualsAndHashCode(callSuper = true)
 public class MedicationAdministrationSearchParams extends BaseResourceSearchParams {
 
+	/**
+	 * Custom search handler key for the non-standard {@code visit} search parameter. OpenMRS
+	 * MedicationAdministration has no visit field, so the handler joins through encounter.visit.
+	 */
+	public static final String VISIT_REFERENCE_SEARCH_HANDLER = "medicationAdministration.visit";
+
 	private ReferenceAndListParam patientReference;
 
 	private ReferenceAndListParam encounterReference;
+
+	private ReferenceAndListParam visitReference;
 
 	private ReferenceAndListParam medicationRequestReference;
 
@@ -46,6 +54,7 @@ public class MedicationAdministrationSearchParams extends BaseResourceSearchPara
 	@Builder
 	public MedicationAdministrationSearchParams(ReferenceAndListParam patientReference,
 												ReferenceAndListParam encounterReference,
+												ReferenceAndListParam visitReference,
 												ReferenceAndListParam medicationRequestReference,
 												ReferenceAndListParam medicationReference,
 												ReferenceAndListParam performerReference,
@@ -57,6 +66,7 @@ public class MedicationAdministrationSearchParams extends BaseResourceSearchPara
 
 		this.patientReference = patientReference;
 		this.encounterReference = encounterReference;
+		this.visitReference = visitReference;
 		this.medicationRequestReference = medicationRequestReference;
 		this.medicationReference = medicationReference;
 		this.performerReference = performerReference;
@@ -68,10 +78,10 @@ public class MedicationAdministrationSearchParams extends BaseResourceSearchPara
 	public SearchParameterMap toSearchParameterMap() {
 		return baseSearchParameterMap().addParameter(FhirConstants.PATIENT_REFERENCE_SEARCH_HANDLER, getPatientReference())
 		        .addParameter(FhirConstants.ENCOUNTER_REFERENCE_SEARCH_HANDLER, getEncounterReference())
-				.addParameter(FhirConstants.MEDICATION_REQUEST_REFERENCE_SEARCH_HANDLER, getEncounterReference())
-				.addParameter(FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER, getEncounterReference())
-				.addParameter(FhirConstants.STATUS_SEARCH_HANDLER, getEncounterReference())
-				.addParameter(FhirConstants.COMMON_SEARCH_HANDLER, getEncounterReference())
-				.addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getEncounterReference());
+		        .addParameter(VISIT_REFERENCE_SEARCH_HANDLER, getVisitReference())
+		        .addParameter(FhirConstants.MEDICATION_REQUEST_REFERENCE_SEARCH_HANDLER, getMedicationRequestReference())
+		        .addParameter(FhirConstants.MEDICATION_REFERENCE_SEARCH_HANDLER, getMedicationReference())
+		        .addParameter(FhirConstants.STATUS_SEARCH_HANDLER, getStatus())
+		        .addParameter(FhirConstants.MEDICATION_ADMINISTRATION_PERFORMER_SEARCH_HANDLER, getPerformerReference());
 	}
 }

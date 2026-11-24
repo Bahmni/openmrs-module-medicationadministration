@@ -35,7 +35,8 @@
 		<many-to-one name="route" class="org.openmrs.Concept" column="route" />
 		<many-to-one name="site" class="org.openmrs.Concept" column="site" />
 
-		<set name="performers" cascade="all">
+		<!-- delete-orphan lets a FHIR PUT replace the performer list (removed rows are deleted). -->
+		<set name="performers" cascade="all, delete-orphan">
 			<key column="medication_administration_id" />
 			<one-to-many class="MedicationAdministrationPerformer" />
 		</set>
